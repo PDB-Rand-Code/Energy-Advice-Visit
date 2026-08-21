@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rand Associates - Energy Advice Visit Checklist</title>
+    <title>Rand Associates - Domestic Energy & Retrofit Assessment Tool</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -32,8 +32,19 @@
             color: #004080;
             margin: 0;
             padding: 0;
-            font-size: 24px;
+            font-size: 26px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .header-top p {
+            margin: 4px 0 0 0;
+            font-weight: 600;
+            color: #555;
+        }
+        .header-logo {
+            max-height: 75px;
+            width: auto;
+            object-fit: contain;
         }
         #header-address {
             font-weight: bold;
@@ -71,8 +82,8 @@
         .center { text-align: center; }
         
         input[type="checkbox"], input[type="radio"] {
-            width: 25px;
-            height: 25px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
             vertical-align: middle;
         }
@@ -81,7 +92,7 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 15px;
             font-family: inherit;
             box-sizing: border-box;
         }
@@ -89,6 +100,11 @@
             background-color: #eef7ff;
             font-weight: bold;
             color: #004080;
+        }
+        .calculated-value {
+            font-weight: bold;
+            color: #004080;
+            background-color: #f8faf9;
         }
         .totals-row th, .totals-row td {
             background-color: #e6f0fa;
@@ -101,9 +117,35 @@
         }
         
         .auto-populated { background-color: #fff3e6; }
+        .manual-row { background-color: #f0fdf4; }
         .module-hidden { display: none !important; }
-        .alert-red { background-color: #ffe6e6 !important; color: #cc0000 !important; }
+        .disabled-block { opacity: 0.4; pointer-events: none; background-color: #f2f2f2; }
+        .alert-red { background-color: #ffe6e6 !important; color: #cc0000 !important; font-weight: bold; }
         
+        .btn-action {
+            background-color: #004080;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .btn-action:hover {
+            background-color: #002850;
+        }
+        .btn-delete {
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         .declaration-text {
             font-size: 14px;
             color: #555;
@@ -124,7 +166,8 @@
         @media print {
             body { background-color: #fff; margin: 0; padding: 0; }
             .container { box-shadow: none; padding: 0; }
-            input, textarea, select { border: 1px solid #ddd; }
+            input, textarea, select, .btn-action, .btn-delete { border: 1px solid #ddd; }
+            .btn-action, .btn-delete { display: none; }
         }
     </style>
 </head>
@@ -137,71 +180,76 @@
             <p>Energy Advice Visit – Resident Checklist</p>
             <div id="header-address"></div>
         </div>
+        <img src="rand-logo.png" alt="Rand Associates Logo" class="header-logo" onerror="this.style.display='none'">
     </div>
 
-    <!-- GENERAL OVERVIEW -->
-    <h2>GENERAL OVERVIEW</h2>
+    <!-- GENERAL SECTION -->
+    <h2>GENERAL</h2>
     <div class="table-wrapper">
         <table>
             <tr>
-                <th>Resident Name:</th><td><input type="text"></td>
-                <th>Date:</th><td><input type="date"></td>
+                <th>Resident Name:</th>
+                <td><input type="text"></td>
+                <th>Date:</th>
+                <td><input type="date"></td>
             </tr>
             <tr>
-                <th>Address:</th><td><textarea id="prop-address" placeholder="Enter full address..."></textarea></td>
-                <th>Advisor:</th><td><input type="text" placeholder="Advisor Name"></td>
-            </tr>
-            <tr>
+                <th rowspan="2">Address:</th>
+                <td rowspan="2"><textarea id="prop-address" placeholder="Enter full address..." style="height: 100px;"></textarea></td>
                 <th>Occupancy (Adults):</th>
-                <td><input type="number" id="occ-adults" value="1" min="1"></td>
-                <th>Occupancy (Children):</th>
-                <td><input type="number" id="occ-children" value="0" min="0"></td>
+                <td><input type="number" id="occ-adults" class="trigger-calc" value="1" min="1"></td>
             </tr>
             <tr>
-                <th>Occupancy Highlights:</th>
-                <td colspan="3">
-                    <label><input type="checkbox" id="psr-child" class="trigger-calc"> Child under 5 in property</label> &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <label><input type="checkbox" id="psr-adult" class="trigger-calc"> Adult over 65 in property</label>
-                    <p style="font-size:0.85em; color:#666; margin-top:5px;">*Ticking either box automatically records Priority Services Register requirements to the Action Log.</p>
+                <th>Occupancy (Children):</th>
+                <td><input type="number" id="occ-children" class="trigger-calc" value="0" min="0"></td>
+            </tr>
+            <tr>
+                <th>Advisor:</th>
+                <td><input type="text" placeholder="Advisor Name"></td>
+                <th>Demographics:</th>
+                <td>
+                    <label><input type="checkbox" id="psr-child" class="trigger-calc"> Child &lt; 5 in property</label><br>
+                    <label style="margin-top: 5px; display: inline-block;"><input type="checkbox" id="psr-adult" class="trigger-calc"> Adult &gt; 65 in property</label>
                 </td>
             </tr>
             <tr>
-                <th colspan="4" style="text-align: center; background: #e6f0fa;">Assessment Scope (Tick to open sections below)</th>
+                <th colspan="4" style="text-align: center; background: #e6f0fa;">Assessment Scope (Select to include sections)</th>
             </tr>
             <tr>
                 <td colspan="4" class="center" style="line-height: 2.2em;">
-                    <label><input type="checkbox" id="chk-elec" checked> Electricity </label> &nbsp;|&nbsp;
-                    <label><input type="checkbox" id="chk-app-mod" checked> Behaviour and Appliance Usage </label> &nbsp;|&nbsp;
-                    <label><input type="radio" name="heat-scope" id="chk-gas" value="gas"> Gas/Oil Heating </label> &nbsp;|&nbsp;
-                    <label><input type="radio" name="heat-scope" id="chk-elec-heat" value="elec"> Electric Heating </label> &nbsp;|&nbsp;
-                    <label><input type="checkbox" id="chk-hot-water"> Hot Water </label> &nbsp;|&nbsp;
-                    <label><input type="checkbox" id="chk-solar"> Solar PV </label> &nbsp;|&nbsp;
-                    <label><input type="checkbox" id="chk-battery"> Battery Storage </label> &nbsp;|&nbsp;
-                    <label><input type="checkbox" id="chk-ev"> Electric Vehicle </label>
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-elec" checked> Electricity Supply </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-app" checked> Appliance Usage </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-gas"> Gas/Oil Heating </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-elec-heat"> Electric Heating </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-hot-water"> Hot Water </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-solar"> Solar PV </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-battery"> Battery </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-ev"> EV </label>
                 </td>
             </tr>
         </table>
     </div>
 
     <!-- ACTION LOG -->
-    <h2>ISSUES TO RESOLVE (ACTION LOG)</h2>
-    <p><em>This register automatically populates identified risks based on assessment inputs and manual selections.</em></p>
+    <h2>ACTION LOG</h2>
+    <p><em>Automatically captures identified risks and allows custom advisor inputs.</em></p>
     <div class="table-wrapper">
-        <table>
+        <table id="action-log-table">
             <thead>
                 <tr>
-                    <th>Category & Item</th>
-                    <th>Recommended Remedial Action / Advice</th>
+                    <th style="width: 40%;">Category & Item</th>
+                    <th style="width: 60%;">Recommended Remedial Action / Advice</th>
                 </tr>
             </thead>
             <tbody id="remedial-register-body">
-                <!-- Rows injected via JavaScript -->
+                <!-- Dynamic rows injected here -->
             </tbody>
         </table>
+        <button type="button" id="btn-add-action" class="btn-action">+ Add Custom Action Item</button>
     </div>
 
     <!-- ELECTRICITY SUPPLY & TARIFF -->
-    <div id="sec-elec" class="module-hidden">
+    <div id="sec-elec">
         <h2>ELECTRICITY SUPPLY & TARIFF</h2>
         <div class="table-wrapper">
             <table>
@@ -211,13 +259,29 @@
                     <th>Payment Method</th>
                     <td>
                         <select id="payment-method" class="trigger-calc">
-                            <option>Variable Direct Debit</option>
-                            <option>Standard Direct Debit</option>
-                            <option>Pay As You Go (Prepay)</option>
-                            <option>Pay Monthly (On Receipt of Bill)</option>
+                            <option value="direct_debit_var">Variable Direct Debit</option>
+                            <option value="direct_debit_std">Standard Direct Debit</option>
+                            <option value="prepay">Pay As You Go (Prepay)</option>
+                            <option value="bill">Pay Monthly (On Receipt of Bill)</option>
                             <option value="not_paying">Not currently contributing to energy bills</option>
                         </select>
                     </td>
+                </tr>
+                <tr>
+                    <th>Tariff Structure</th>
+                    <td>
+                        <select id="tariff-structure" class="trigger-calc">
+                            <option value="variable">Variable (Price Cap)</option>
+                            <option value="fixed">Fixed</option>
+                            <option value="romo">Economy 7 / RO/MO</option>
+                        </select>
+                    </td>
+                    <th>Tariff Change / End Date</th>
+                    <td><select id="tariff-date-select"></select></td>
+                </tr>
+                <tr id="row-elec-exit-fee" class="module-hidden">
+                    <th>Exit Fee Details</th>
+                    <td colspan="3"><input type="text" placeholder="Enter exit fee amount or conditions (e.g., £50)"></td>
                 </tr>
                 <tr>
                     <th>Rate Type</th>
@@ -227,17 +291,13 @@
                             <option value="dual">Dual Rate (Day and Night)</option>
                         </select>
                     </td>
-                    <th>Tariff Structure</th>
+                    <th>Billing Method</th>
                     <td>
-                        <select id="tariff-structure">
-                            <option value="variable">Variable (Price Cap)</option>
-                            <option value="fixed">Fixed</option>
+                        <select id="billing-method">
+                            <option value="paper">Paper Bills</option>
+                            <option value="in_app">In-App</option>
                         </select>
                     </td>
-                </tr>
-                <tr>
-                    <th>Tariff Change / End Date</th>
-                    <td colspan="3"><select id="tariff-date-select"></select></td>
                 </tr>
             </table>
             
@@ -256,9 +316,9 @@
                 </tr>
                 <tr id="row-dual-split" class="module-hidden">
                     <th>Day Usage (kWh)</th>
-                    <td><input type="number" id="usage-day" class="trigger-calc" placeholder="Optional split"></td>
+                    <td><input type="number" id="usage-day" class="trigger-calc" placeholder="Day kWh"></td>
                     <th>Night Usage (kWh)</th>
-                    <td><input type="number" id="usage-night" class="trigger-calc" placeholder="Optional split"></td>
+                    <td><input type="number" id="usage-night" class="trigger-calc" placeholder="Night kWh"></td>
                 </tr>
                 <tr>
                     <th>Day Unit Rate (p/kWh)</th>
@@ -269,12 +329,12 @@
                 <tr>
                     <th>Standing Charge (p/day)</th>
                     <td><input type="number" step="0.01" id="rate-sc" class="trigger-calc" placeholder="pence per day"></td>
-                    <th>Calculated Energy Cost (Per Month)</th>
-                    <td><input type="text" id="calc-energy" class="calc-output" readonly placeholder="£0.00"></td>
-                </tr>
-                <tr>
                     <th>Calculated Standing Charge (Per Month)</th>
                     <td><input type="text" id="calc-sc" class="calc-output" readonly placeholder="£0.00"></td>
+                </tr>
+                <tr>
+                    <th>Calculated Energy Cost (Per Month)</th>
+                    <td><input type="text" id="calc-energy" class="calc-output" readonly placeholder="£0.00"></td>
                     <th>Total Estimated Monthly Cost</th>
                     <td><input type="text" id="calc-total" class="calc-output" readonly placeholder="£0.00"></td>
                 </tr>
@@ -282,9 +342,9 @@
         </div>
     </div>
 
-    <!-- BEHAVIOUR AND APPLIANCE USAGE -->
-    <div id="sec-app" class="module-hidden">
-        <h2>BEHAVIOUR AND APPLIANCE USAGE</h2>
+    <!-- APPLIANCE USAGE -->
+    <div id="sec-app">
+        <h2>APPLIANCE USAGE</h2>
         <div class="table-wrapper">
             <table>
                 <tr>
@@ -297,7 +357,6 @@
                             <option value="1000">£1,000 - £1,500 (Supplier Switch blocked)</option>
                             <option value="5000">£1,500 - £5,000+ (Supplier Switch blocked)</option>
                         </select>
-                        <p style="font-size:0.85em; color:#666; margin-top:5px;">*Debts over £150 generally prevent the resident from changing supplier via debt assignment protocols.</p>
                     </td>
                 </tr>
                 <tr>
@@ -306,8 +365,6 @@
                     <th>Est. kWh / Month</th>
                     <th>Est. Cost / Month</th>
                 </tr>
-                
-                <!-- Washing Machine -->
                 <tr>
                     <td><strong>Washing Machine</strong> (Avg 0.7 kWh/cycle)</td>
                     <td>
@@ -322,8 +379,6 @@
                     <td><input type="text" id="app-wash-kwh" readonly class="calc-output"></td>
                     <td><input type="text" id="app-wash-cost" readonly class="calc-output"></td>
                 </tr>
-
-                <!-- Tumble Dryer -->
                 <tr>
                     <td><strong>Tumble Dryer</strong> (Avg 2.5 kWh/cycle)</td>
                     <td>
@@ -338,8 +393,6 @@
                     <td><input type="text" id="app-dryer-kwh" readonly class="calc-output"></td>
                     <td><input type="text" id="app-dryer-cost" readonly class="calc-output"></td>
                 </tr>
-
-                <!-- Electric Shower -->
                 <tr>
                     <td><strong>Electric Shower</strong> (Avg 8.5kW)</td>
                     <td>
@@ -354,8 +407,6 @@
                     <td><input type="text" id="app-shower-kwh" readonly class="calc-output"></td>
                     <td><input type="text" id="app-shower-cost" readonly class="calc-output"></td>
                 </tr>
-
-                <!-- Fridge/Freezer -->
                 <tr>
                     <td><strong>Fridge/Freezer</strong> (24/7 Run)</td>
                     <td>
@@ -368,8 +419,6 @@
                     <td><input type="text" id="app-fridge-kwh" readonly class="calc-output"></td>
                     <td><input type="text" id="app-fridge-cost" readonly class="calc-output"></td>
                 </tr>
-
-                <!-- Plug-in Heaters -->
                 <tr>
                     <td><strong>Plug-in Heaters</strong> (Avg 2kW)</td>
                     <td>
@@ -379,8 +428,6 @@
                     <td><input type="text" id="app-heater-kwh" readonly class="calc-output"></td>
                     <td><input type="text" id="app-heater-cost" readonly class="calc-output"></td>
                 </tr>
-
-                <!-- Electric Oven/Hob -->
                 <tr>
                     <td><strong>Electric Oven/Hob</strong> (Avg 3kW)</td>
                     <td>
@@ -397,8 +444,6 @@
                     <td><input type="text" id="app-oven-kwh" readonly class="calc-output"></td>
                     <td><input type="text" id="app-oven-cost" readonly class="calc-output"></td>
                 </tr>
-
-                <!-- TOTALS -->
                 <tr class="totals-row">
                     <td colspan="2" style="text-align: right;"><strong>Estimated Appliance Totals (Monthly):</strong></td>
                     <td><input type="text" id="app-total-kwh" readonly class="calc-output"></td>
@@ -433,8 +478,14 @@
                             <option value="outdated">Out of date storage heater</option>
                         </select>
                     </td>
-                    <th>Quantity of Heaters</th>
-                    <td><input type="number" min="1" value="1"></td>
+                    <th>Number of Heaters Used</th>
+                    <td><input type="number" id="storage-qty" min="1" value="1" class="trigger-calc"></td>
+                </tr>
+                <tr>
+                    <th>Night/Day Tariff Split (%)</th>
+                    <td><input type="text" id="night-split-output" readonly placeholder="Auto-calculated" class="calc-output"></td>
+                    <th>Est. Overnight Charge / Night</th>
+                    <td><input type="text" id="calc-overnight-charge" readonly class="calc-output" placeholder="£0.00"></td>
                 </tr>
                 <tr>
                     <th>Configuration Checklist</th>
@@ -449,9 +500,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Night/Day Tariff Split (%)</th>
-                    <td colspan="2"><input type="text" id="night-split-output" readonly placeholder="Auto-calculated from Section 3" class="calc-output"></td>
-                    <td class="center"><label><input type="checkbox" id="chk-night-split" class="action-req-cb trigger-calc" data-category="Economy 7" data-item="Off-peak usage under 40% (Single rate may be cheaper)"> Highlight low off-peak use (< 40%)</label></td>
+                    <th>Storage Heating Notes</th>
+                    <td colspan="3">
+                        <textarea placeholder="Enter specific observations or advice regarding night storage heaters..."></textarea>
+                    </td>
                 </tr>
             </table>
 
@@ -482,6 +534,12 @@
                         <label><input type="checkbox"> Legionella cycle verified</label>
                     </td>
                 </tr>
+                <tr>
+                    <th>Heat Pump Notes</th>
+                    <td colspan="3">
+                        <textarea placeholder="Enter specific observations or advice regarding the Heat Pump system..."></textarea>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -492,39 +550,94 @@
         <div class="table-wrapper">
             <table>
                 <tr>
-                    <th>Gas/Oil Energy Supplier</th>
-                    <td><input type="text" id="gas-supplier" class="trigger-calc" placeholder="Enter gas supplier"></td>
-                    <td colspan="2"><span style="font-size:0.9em; color:#555;">Mismatched gas and electric suppliers will automatically populate the Action Log.</span></td>
-                </tr>
-                <tr>
-                    <th>Boiler Configuration</th>
-                    <td>
-                        <select>
-                            <option>Combination Boiler</option>
-                            <option>System / Regular Boiler with Hot Water Cylinder</option>
+                    <th>Heating Fuel Type</th>
+                    <td colspan="3">
+                        <select id="heating-fuel" class="trigger-calc">
+                            <option value="gas">Gas</option>
+                            <option value="oil">Oil</option>
                         </select>
                     </td>
-                    <th>Last Serviced Date</th>
-                    <td>
-                        <input type="date" id="boiler-service-date" class="trigger-calc">
-                    </td>
                 </tr>
+                <!-- Gas-specific tariff and tracking rows -->
+                <tr id="row-gas-tariff-structure" class="row-gas-only">
+                    <th>Tariff Structure</th>
+                    <td>
+                        <select id="gas-tariff-structure" class="trigger-calc">
+                            <option value="variable">Variable (Price Cap)</option>
+                            <option value="fixed">Fixed</option>
+                        </select>
+                    </td>
+                    <th>Tariff Change / End Date</th>
+                    <td><select id="gas-tariff-date-select"></select></td>
+                </tr>
+                <tr id="row-gas-exit-fee" class="row-gas-only module-hidden">
+                    <th>Exit Fee Details</th>
+                    <td colspan="3"><input type="text" placeholder="Enter exit fee amount or conditions (e.g., £50)"></td>
+                </tr>
+                <tr class="row-gas-only">
+                    <th>Energy Company</th>
+                    <td><input type="text" id="gas-supplier" class="trigger-calc" placeholder="Enter gas supplier"></td>
+                    <th>Last Serviced Date</th>
+                    <td><input type="date" id="boiler-service-date" class="trigger-calc"></td>
+                </tr>
+                
+                <!-- Oil-specific rows (hidden by default) -->
+                <tr id="row-oil-tank" class="module-hidden">
+                    <th>Oil Tank Size (Litres)</th>
+                    <td><input type="number" placeholder="e.g. 1000"></td>
+                    <th>Cost of Oil</th>
+                    <td><input type="text" placeholder="e.g. £500 per fill or 60p/litre"></td>
+                </tr>
+                <tr id="row-oil-service" class="module-hidden">
+                    <th>Last Serviced Date</th>
+                    <td colspan="3"><input type="date" id="oil-service-date" class="trigger-calc"></td>
+                </tr>
+                
                 <tr>
                     <th>Heating Controls Present</th>
                     <td colspan="3">
-                        <label><input type="checkbox"> Main Boiler Thermostat</label> &nbsp;|&nbsp;
-                        <label><input type="checkbox"> Programmer / Digital Switch</label> &nbsp;|&nbsp;
-                        <label><input type="checkbox"> TRVs on radiators</label>
-                        <br><label style="color:#004080; font-weight:bold; margin-top:10px; display:inline-block;"><input type="checkbox" class="action-req-cb trigger-calc" data-category="Heating Controls" data-item="Heating control upgrade recommended via social housing provider"> Missing Controls Requiring Attention</label>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Heating Controls Notes</th>
-                    <td colspan="3">
-                        <textarea placeholder="Enter notes regarding heating controls, accessibility, or resident feedback..."></textarea>
+                        <select id="heating-controls-select">
+                            <option value="none">None</option>
+                            <option value="thermostat">Thermostat</option>
+                            <option value="prog_thermostat">Programmable Thermostat</option>
+                            <option value="smart_app">Smart/App Controlled</option>
+                        </select>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <label><input type="checkbox"> TRVs on Radiators</label>
+                        <br><label style="color:#004080; font-weight:bold; margin-top:10px; display:inline-block;"><input type="checkbox" class="action-req-cb trigger-calc" data-category="Heating Controls" data-item="Heating control upgrade recommended via social housing provider"> Missing Controls Requiring Attention (Triggers Action Log)</label>
                     </td>
                 </tr>
             </table>
+
+            <!-- Gas Usage & Cost Calculations -->
+            <div id="gas-calc-wrapper" class="row-gas-only">
+                <h4 style="margin-top: 15px;">Gas Calculations & Usage (Before Tax)</h4>
+                <table>
+                    <tr>
+                        <th>Usage Input Format</th>
+                        <td>
+                            <select id="gas-usage-format" class="trigger-calc">
+                                <option value="annual">Estimated Annual Usage (kWh)</option>
+                                <option value="monthly">Estimated Monthly Usage (kWh)</option>
+                            </select>
+                        </td>
+                        <th>Total Usage Input</th>
+                        <td><input type="number" id="gas-usage-input" class="trigger-calc" placeholder="Total kWh"></td>
+                    </tr>
+                    <tr>
+                        <th>Rate per kWh (p)</th>
+                        <td><input type="number" step="0.01" id="gas-rate-unit" class="trigger-calc" placeholder="e.g. 6.8"></td>
+                        <th>Standing Charge (p/day)</th>
+                        <td><input type="number" step="0.01" id="gas-rate-sc" class="trigger-calc" placeholder="e.g. 30.0"></td>
+                    </tr>
+                    <tr>
+                        <th>Calculated Standing Charge (Per Month)</th>
+                        <td class="calculated-value" id="calc-gas-sc">£0.00 / mo</td>
+                        <th>Total Estimated Monthly Cost</th>
+                        <td class="calculated-value" id="calc-gas-total">£0.00 / mo</td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -535,16 +648,18 @@
             <table>
                 <tr>
                     <th>Heated By</th>
-                    <td>
-                        <select>
-                            <option>Main Heating System (Boiler/ASHP)</option>
-                            <option>Immersion Heater Only</option>
-                            <option>Both</option>
-                            <option>Instantaneous unit</option>
+                    <td colspan="3">
+                        <select id="hw-heated-by" class="trigger-calc">
+                            <option value="main">Main Heating System (Boiler/ASHP)</option>
+                            <option value="immersion">Immersion Heater Only</option>
+                            <option value="both">Both</option>
+                            <option value="instantaneous">Instantaneous unit</option>
                         </select>
                     </td>
+                </tr>
+                <tr class="hw-conditional-row">
                     <th>Immersion Setup</th>
-                    <td>
+                    <td colspan="3">
                         <select>
                             <option>Single Immersion</option>
                             <option>Dual Immersion</option>
@@ -552,20 +667,20 @@
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr class="hw-conditional-row">
                     <th>Control Method</th>
                     <td>
                         <select id="hw-control" class="trigger-calc">
-                            <option>Off-Peak Timer</option>
-                            <option>App Controlled</option>
-                            <option>Manual Switch</option>
+                            <option value="timer">Off-Peak Timer</option>
+                            <option value="programmer">Programmer</option>
+                            <option value="app">App Controlled</option>
+                            <option value="manual">Manual Switch</option>
                             <option value="continuous">On Continuous (High cost risk)</option>
                         </select>
                     </td>
                     <th>Timer Set Periods</th>
                     <td>
-                        Start: <input type="time" style="width:100px;"> 
-                        End: <input type="time" style="width:100px;">
+                        <textarea placeholder="Record timer periods or heating schedule details..." style="min-height: 60px;"></textarea>
                     </td>
                 </tr>
             </table>
@@ -595,25 +710,24 @@
                     <td colspan="3">
                         <select id="solar-account-status" class="trigger-calc">
                             <option value="active">Yes - Active</option>
-                            <option value="none">No Account Setup</option>
+                            <option value="none">No - Online Account set up required</option>
                         </select>
                     </td>
                 </tr>
-                <tr>
+                <tr id="row-solar-payment">
                     <th>Payment Destination</th>
                     <td colspan="3">
                         <select>
                             <option>Credit applied to Energy Bill</option>
-                            <option>Direct to Bank Account (e.g., OVO, British Gas)</option>
+                            <option>Direct to Bank Account</option>
                         </select>
                     </td>
                 </tr>
             </table>
 
-            <!-- Document checklist only appears if export funds = No -->
             <table id="solar-docs-wrapper" class="module-hidden">
                 <tr>
-                    <th colspan="2" style="background: #e6f0fa;">Missing Export Documents Checklist</th>
+                    <th colspan="2" style="background: #e6f0fa;">Missing Export Documents Checklist (Unticked = Missing)</th>
                 </tr>
                 <tr>
                     <td colspan="2">
@@ -623,7 +737,6 @@
                             <label><input type="checkbox" class="doc-chk trigger-calc" data-doc="Proof of Ownership"> Proof of Ownership</label>
                             <label><input type="checkbox" class="doc-chk trigger-calc" data-doc="Photo of Export on Electric Meter"> Photo of Export on Electric Meter</label>
                         </div>
-                        <p style="font-size:0.85em; color:#666; margin-top:5px;">*Unchecked items will automatically populate to the Action Log as missing documents.</p>
                     </td>
                 </tr>
             </table>
@@ -643,7 +756,7 @@
                         <select>
                             <option>Inverter Integrated Display / Manual Controls</option>
                             <option>Dedicated Resident App (Self-Managed)</option>
-                            <option>Energy Company Managed (e.g., Octopus Energy Tenant Power / VPP)</option>
+                            <option>Energy Company Managed</option>
                         </select>
                     </td>
                 </tr>
@@ -666,13 +779,15 @@
             <table>
                 <tr>
                     <th>EV Charger Present?</th>
-                    <td>
-                        <select>
-                            <option>Yes - Dedicated Home Charger</option>
-                            <option>Yes - 3-pin Plug (Granny Charger - Review)</option>
-                            <option>No Charger Present</option>
+                    <td colspan="3">
+                        <select id="ev-charger-present" class="trigger-calc">
+                            <option value="dedicated">Yes - Dedicated Home Charger</option>
+                            <option value="granny">Yes - 3-pin Plug (Granny Charger - Review)</option>
+                            <option value="none">No Charger Present</option>
                         </select>
                     </td>
+                </tr>
+                <tr class="ev-conditional-row">
                     <th>Charger Power / Type</th>
                     <td>
                         <select>
@@ -681,8 +796,6 @@
                             <option>Standard 3-pin Socket</option>
                         </select>
                     </td>
-                </tr>
-                <tr>
                     <th>Cable Setup</th>
                     <td>
                         <select>
@@ -690,20 +803,14 @@
                             <option>Untethered Unit</option>
                         </select>
                     </td>
+                </tr>
+                <tr class="ev-conditional-row">
                     <th>Smart Tariff Compatibility</th>
-                    <td>
+                    <td colspan="3">
                         <select>
                             <option>Compatible with EV Tariffs (e.g., Intelligent Octopus)</option>
                             <option>Standard Tariff Charging</option>
                         </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Parking & Compliance</th>
-                    <td colspan="3">
-                        <label><input type="checkbox"> Off-street driveway / garage parking confirmed</label><br>
-                        <label><input type="checkbox"> DNO notification completed</label><br>
-                        <label><input type="checkbox"> OZEV grant eligibility reviewed</label>
                     </td>
                 </tr>
             </table>
@@ -741,124 +848,44 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         
+        // --- 1. DOM Element Selections ---
         const addressInput = document.getElementById('prop-address');
         const headerAddress = document.getElementById('header-address');
         const registerBody = document.getElementById('remedial-register-body');
-
-        // Address Sync
-        if (addressInput && headerAddress) {
-            addressInput.addEventListener('input', function() {
-                headerAddress.textContent = this.value;
-            });
-        }
-
-        // Section Toggles
-        const chkElec = document.getElementById('chk-elec');
-        const secElec = document.getElementById('sec-elec');
-        chkElec.addEventListener('change', () => secElec.classList.toggle('module-hidden', !chkElec.checked));
-
-        const chkAppMod = document.getElementById('chk-app-mod');
-        const secApp = document.getElementById('sec-app');
-        chkAppMod.addEventListener('change', () => secApp.classList.toggle('module-hidden', !chkAppMod.checked));
-
-        const heatRadios = document.querySelectorAll('input[name="heat-scope"]');
-        const secGas = document.getElementById('sec-gas');
-        const secElecHeat = document.getElementById('sec-elec-heat');
-        
-        heatRadios.forEach(r => {
-            r.addEventListener('change', () => {
-                const val = document.querySelector('input[name="heat-scope"]:checked')?.value;
-                secGas.classList.toggle('module-hidden', val !== 'gas');
-                secElecHeat.classList.toggle('module-hidden', val !== 'elec');
-            });
-        });
-
-        const chkHotWater = document.getElementById('chk-hot-water');
-        const secHotWater = document.getElementById('sec-hot-water');
-        chkHotWater.addEventListener('change', () => secHotWater.classList.toggle('module-hidden', !chkHotWater.checked));
-
-        const chkSolar = document.getElementById('chk-solar');
-        const secSolar = document.getElementById('sec-solar');
-        chkSolar.addEventListener('change', () => secSolar.classList.toggle('module-hidden', !chkSolar.checked));
-
-        const chkBattery = document.getElementById('chk-battery');
-        const secBattery = document.getElementById('sec-battery');
-        chkBattery.addEventListener('change', () => secBattery.classList.toggle('module-hidden', !chkBattery.checked));
-
-        const chkEv = document.getElementById('chk-ev');
-        const secEv = document.getElementById('sec-ev');
-        chkEv.addEventListener('change', () => secEv.classList.toggle('module-hidden', !chkEv.checked));
-
-        // Heating Type Dynamics (Storage vs ASHP)
+        const scopeToggles = document.querySelectorAll('.scope-toggle');
         const eHeatRadios = document.querySelectorAll('input[name="e_heat"]');
         const subStorage = document.getElementById('sub-storage');
         const subAshp = document.getElementById('sub-ashp');
-        eHeatRadios.forEach(r => {
-            r.addEventListener('change', () => {
-                const isStorage = document.querySelector('input[name="e_heat"]:checked').value === 'storage';
-                subStorage.classList.toggle('module-hidden', !isStorage);
-                subAshp.classList.toggle('module-hidden', isStorage);
-            });
-        });
-
-        // Tariff Date Logic
+        const fuelSelect = document.getElementById('heating-fuel');
+        const rowGasOnly = document.querySelectorAll('.row-gas-only');
+        const rowOil = document.getElementById('row-oil-tank');
+        const gasCalcWrapper = document.getElementById('gas-calc-wrapper');
+        const hwHeatedBy = document.getElementById('hw-heated-by');
+        const hwConditionalRows = document.querySelectorAll('.hw-conditional-row');
+        const evChargerSelect = document.getElementById('ev-charger-present');
+        const evConditionalRows = document.querySelectorAll('.ev-conditional-row');
         const structureSelect = document.getElementById('tariff-structure');
         const dateSelect = document.getElementById('tariff-date-select');
-        
-        function updateDateDropdown() {
-            dateSelect.innerHTML = '';
-            if (structureSelect.value === 'variable') {
-                const d = new Date();
-                const m = d.getMonth() + 1;
-                let nextCap = "1st January (Next Year)";
-                if (m < 4) nextCap = "1st April";
-                else if (m < 7) nextCap = "1st July";
-                else if (m < 9) nextCap = "1st September";
-                
-                const opt = document.createElement('option');
-                opt.value = nextCap;
-                opt.text = "Next Ofgem Cap: " + nextCap;
-                dateSelect.appendChild(opt);
-            } else {
-                const d = new Date();
-                for (let i = 0; i < 24; i++) {
-                    const tempD = new Date(d.getFullYear(), d.getMonth() + i, 1);
-                    const monthStr = tempD.toLocaleString('default', { month: 'long', year: 'numeric' });
-                    const opt = document.createElement('option');
-                    opt.value = monthStr;
-                    opt.text = "Ends: " + monthStr;
-                    dateSelect.appendChild(opt);
-                }
-            }
-        }
-        structureSelect.addEventListener('change', updateDateDropdown);
-        updateDateDropdown();
-
-        // Rate Type Toggle
+        const gasStructureSelect = document.getElementById('gas-tariff-structure');
+        const gasDateSelect = document.getElementById('gas-tariff-date-select');
         const rateTypeSelect = document.getElementById('rate-type-select');
         const nightRateInput = document.getElementById('rate-night');
         const rowDualSplit = document.getElementById('row-dual-split');
-        
-        rateTypeSelect.addEventListener('change', (e) => {
-            const isDual = e.target.value === 'dual';
-            nightRateInput.disabled = !isDual;
-            rowDualSplit.classList.toggle('module-hidden', !isDual);
-        });
-
-        // Solar Funds & Docs Toggle
         const solarExportStatus = document.getElementById('solar-export-status');
         const rowSolarAccount = document.getElementById('row-solar-account');
+        const rowSolarPayment = document.getElementById('row-solar-payment');
+        const solarAccountStatus = document.getElementById('solar-account-status');
         const solarDocsWrapper = document.getElementById('solar-docs-wrapper');
         
-        solarExportStatus.addEventListener('change', (e) => {
-            const isNo = e.target.value === 'no';
-            rowSolarAccount.classList.toggle('module-hidden', !isNo);
-            solarDocsWrapper.classList.toggle('module-hidden', !isNo);
-        });
+        // New elements from EnergyAdvice 10 integration
+        const elecExitFeeRow = document.getElementById('row-elec-exit-fee');
+        const rowGasExitFee = document.getElementById('row-gas-exit-fee');
+        const rowGasTariffStructure = document.getElementById('row-gas-tariff-structure');
 
-        // --- CENTRAL LOGIC ENGINE ---
-        
+        // --- 2. Master Calculation & Automation Engine ---
         function runMasterCalculation() {
+            // Save manual rows added by user
+            const manualRows = Array.from(registerBody.querySelectorAll('tr.manual-row'));
             registerBody.innerHTML = '';
 
             function addActionRow(category, item, remedialAction) {
@@ -866,91 +893,50 @@
                 tr.className = 'auto-populated';
                 tr.innerHTML = `
                     <td><strong>${category}</strong><br>${item}</td>
-                    <td><input type="text" value="${remedialAction}" placeholder="Enter recommended action..."></td>
+                    <td><input type="text" value="${remedialAction}"></td>
                 `;
                 registerBody.appendChild(tr);
             }
 
-            // Manual checks
+            // Process Manual Action Logic Checks
             document.querySelectorAll('.action-req-cb').forEach(cb => {
                 if (cb.checked && !cb.closest('.module-hidden')) {
                     addActionRow(cb.getAttribute('data-category'), cb.getAttribute('data-item'), "Action required");
                 }
             });
 
-            // PSR Check
-            if (document.getElementById('psr-child').checked) addActionRow("Vulnerability (PSR)", "Child under 5 in property", "Ensure registered on Priority Services Register");
-            if (document.getElementById('psr-adult').checked) addActionRow("Vulnerability (PSR)", "Adult over 65 in property", "Ensure registered on Priority Services Register");
+            // Occupancy Metrics
+            const adults = parseInt(document.getElementById('occ-adults').value) || 0;
+            const children = parseInt(document.getElementById('occ-children').value) || 0;
+            const totalOccupants = adults + children;
 
-            // Payment / Debt Check
+            // Priority Services Register Rules
+            if (document.getElementById('psr-child').checked) addActionRow("Vulnerability (PSR)", "Child < 5 in property", "Register on Priority Services Register");
+            if (document.getElementById('psr-adult').checked) addActionRow("Vulnerability (PSR)", "Adult > 65 in property", "Register on Priority Services Register");
+
+            // Payment & Debt Rules
             if (document.getElementById('payment-method').value === 'not_paying') {
-                addActionRow("Financial Hardship", "Not currently contributing to energy bills", "Urgent referral for debt support / LEAP / Fuel vouchers");
+                addActionRow("Financial Hardship", "Not contributing to energy bills", "Urgent referral for debt support / LEAP / Fuel vouchers");
             }
             const debtValue = parseInt(document.getElementById('debt-status').value);
             if (debtValue >= 500) {
                 addActionRow("Financial / Switching", "Debt over £150", "Supplier switch blocked due to debt protocol. Resolve arrears first.");
             }
 
-            // Gas/Oil Supplier Match Check
-            const elecSupp = document.getElementById('elec-supplier').value.trim().toLowerCase();
-            const gasSupp = document.getElementById('gas-supplier').value.trim().toLowerCase();
-            if (secGas && !secGas.classList.contains('module-hidden') && gasSupp !== '' && elecSupp !== '' && gasSupp !== elecSupp) {
-                addActionRow("Energy Supply", "Gas and electricity suppliers do not match", "Check dual fuel bundle options to reduce standing charges.");
-            }
-
-            // Boiler Service Date Check
-            const serviceDateInput = document.getElementById('boiler-service-date');
-            if (serviceDateInput && serviceDateInput.value) {
-                const sDate = new Date(serviceDateInput.value);
-                const today = new Date();
-                const diffTime = Math.abs(today - sDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays > 365) {
-                    addActionRow("Boiler Servicing", "Exceeds 12 months since last service", "Annual safety and efficiency service required.");
-                }
-            }
-
-            // Storage Heater Outdated Check
-            if (document.querySelector('input[name="heat-scope"]:checked')?.value === 'elec' &&
-                document.querySelector('input[name="e_heat"]:checked')?.value === 'storage' &&
-                document.getElementById('storage-age').value === 'outdated') {
-                addActionRow("Heating System", "Out of date storage heater", "Upgrade required via social housing provider schemes");
-            }
-
-            // Hot Water Continuous Check
-            if (document.getElementById('chk-hot-water').checked && document.getElementById('hw-control').value === 'continuous') {
-                addActionRow("Hot Water", "Immersion set to 'Continuous'", "High cost alert: Reprogram to off-peak timer");
-            }
-
-            // Solar Check
-            if (document.getElementById('chk-solar').checked) {
-                const solarRate = parseFloat(document.getElementById('solar-rate').value);
-                if (solarRate > 0 && solarRate < 12) {
-                    addActionRow("Solar PV", `Low Export Rate (${solarRate}p)`, "Consider switching export provider for better SEG rate");
-                }
-                
-                if (document.getElementById('solar-export-status').value === 'no') {
-                    if (document.getElementById('solar-account-status').value === 'none') {
-                        addActionRow("Solar PV", "No Online Account Setup", "Account creation required to apply for export funds");
-                    }
-                    document.querySelectorAll('.doc-chk').forEach(chk => {
-                        if (!chk.checked) addActionRow("Solar PV Docs", `Missing: ${chk.getAttribute('data-doc')}`, "Obtain document to facilitate export payments");
-                    });
-                }
-            }
-
-            // Electricity Calculations
+            // Electricity Section Automations
+            const isElecScope = document.querySelector('input[data-target="sec-elec"]').checked;
             const usageFormat = document.getElementById('usage-format').value;
-            let usage = parseFloat(document.getElementById('usage-input').value) || 0;
+            let usageInput = parseFloat(document.getElementById('usage-input').value) || 0;
             const dayRate = parseFloat(document.getElementById('rate-day').value) || 0;
             const nightRate = parseFloat(document.getElementById('rate-night').value) || 0;
             const scRate = parseFloat(document.getElementById('rate-sc').value) || 0;
             const isDual = rateTypeSelect.value === 'dual';
 
-            let monthlyUsageKwh = usageFormat === 'monthly' ? usage : (usage / 12);
-            let annualUsageKwh = usageFormat === 'annual' ? usage : (usage * 12);
-            let monthlyEnergyCost = 0;
+            let annualUsageKwh = usageFormat === 'annual' ? usageInput : (usageInput * 12);
+            let monthlyUsageKwh = usageFormat === 'monthly' ? usageInput : (usageInput / 12);
 
+            // Electricity Cost calculation
+            let monthlyEnergyCost = 0;
             if (isDual) {
                 const dayUsageInput = parseFloat(document.getElementById('usage-day').value) || 0;
                 const nightUsageInput = parseFloat(document.getElementById('usage-night').value) || 0;
@@ -959,47 +945,56 @@
                 monthlyEnergyCost = ((mDayKwh * dayRate) + (mNightKwh * nightRate)) / 100;
                 
                 const totalSplitKwh = dayUsageInput + nightUsageInput;
-                if(totalSplitKwh > 0) {
+                const splitOutput = document.getElementById('night-split-output');
+                if (totalSplitKwh > 0) {
                     const nightPct = (nightUsageInput / totalSplitKwh) * 100;
-                    document.getElementById('night-split-output').value = nightPct.toFixed(1) + "%";
-                    if (nightPct < 40) addActionRow("Economy 7", `Off-peak usage is only ${nightPct.toFixed(1)}%`, "Single rate tariff may be cheaper. Model switch.");
+                    splitOutput.value = nightPct.toFixed(1) + "%";
+                    
+                    if (nightPct < 40) {
+                        splitOutput.classList.add('alert-red');
+                        if (isElecScope) {
+                            addActionRow("Economy 7", `Off-peak usage is only ${nightPct.toFixed(1)}%`, "Single rate tariff may be cheaper. Model switch.");
+                        }
+                    } else {
+                        splitOutput.classList.remove('alert-red');
+                    }
                 }
             } else {
                 monthlyEnergyCost = (monthlyUsageKwh * dayRate) / 100;
             }
 
-            const monthlySCCost = (scRate / 100) * 30.416;
+            const monthlySCCost = (scRate * 365 / 12) / 100;
             const totalMonthlyCost = monthlyEnergyCost + monthlySCCost;
 
             document.getElementById('calc-energy').value = "£" + monthlyEnergyCost.toFixed(2);
             document.getElementById('calc-sc').value = "£" + monthlySCCost.toFixed(2);
             document.getElementById('calc-total').value = "£" + totalMonthlyCost.toFixed(2);
 
-            // Benchmark
-            const totalOcc = parseInt(document.getElementById('occ-adults').value) + parseInt(document.getElementById('occ-children').value);
-            const isElecHeat = document.querySelector('input[name="heat-scope"]:checked')?.value === 'elec';
-            
-            let benchmark = 2700; 
-            if (isElecHeat) {
-                if(totalOcc <= 1) benchmark = 2500;
-                else if(totalOcc <= 3) benchmark = 4200;
-                else benchmark = 6500;
-            } else {
-                if(totalOcc <= 1) benchmark = 1800;
-                else if(totalOcc <= 3) benchmark = 2700;
-                else benchmark = 4100;
+            // Benchmark Analysis - Electricity
+            if (isElecScope && annualUsageKwh > 0) {
+                const isElecHeat = document.querySelector('input[data-target="sec-elec-heat"]').checked;
+                let benchmark = 2700; 
+                if (isElecHeat) {
+                    if (totalOccupants <= 1) benchmark = 2500;
+                    else if (totalOccupants <= 3) benchmark = 4200;
+                    else benchmark = 6500;
+                } else {
+                    if (totalOccupants <= 1) benchmark = 1800;
+                    else if (totalOccupants <= 3) benchmark = 2700;
+                    else benchmark = 4100;
+                }
+
+                if (annualUsageKwh > (benchmark * 1.05)) {
+                    addActionRow("High Electricity Consumption", `Usage (${annualUsageKwh.toFixed(0)} kWh/yr) exceeds national benchmark (${benchmark} kWh)`, "Conduct behavioural check and appliance matrix.");
+                    document.getElementById('calc-total').classList.add('alert-red');
+                } else {
+                    document.getElementById('calc-total').classList.remove('alert-red');
+                }
             }
 
-            if (annualUsageKwh > 0 && annualUsageKwh > (benchmark * 1.05)) {
-                addActionRow("High Energy Consumption", `Usage (${annualUsageKwh.toFixed(0)} kWh/yr) exceeds national average profile (${benchmark} kWh)`, "Conduct behavioural check and appliance matrix.");
-                document.getElementById('calc-total').classList.add('alert-red');
-            } else {
-                document.getElementById('calc-total').classList.remove('alert-red');
-            }
-
-            // --- Appliance Matrix Calculations ---
+            // Appliance Usage Section Automations
+            const isAppScope = document.querySelector('input[data-target="sec-app"]').checked;
             const unitRateCalc = (isDual && dayRate > 0) ? dayRate : (dayRate > 0 ? dayRate : 24.5);
-            
             let totalAppKwh = 0;
             let totalAppCost = 0;
             const waterNote = " It may be worth speaking to the water company.";
@@ -1011,7 +1006,9 @@
             document.getElementById('app-wash-kwh').value = washKwh.toFixed(1);
             document.getElementById('app-wash-cost').value = "£" + washCost.toFixed(2);
             totalAppKwh += washKwh; totalAppCost += washCost;
-            if (washFreq > 15 && totalOcc <= 2) addActionRow("Appliance Overuse", "Washing Machine used >3 times/week for small household", "Advise full loads / 30°C cycles." + waterNote);
+            if (isAppScope && washFreq > 15 && totalOccupants <= 2) {
+                addActionRow("Appliance Overuse", "Washing Machine used >3 times/week for small household", "Advise full loads / 30°C cycles." + waterNote);
+            }
 
             // Tumble Dryer
             const dryFreq = parseInt(document.getElementById('app-dryer').value) || 0;
@@ -1020,7 +1017,9 @@
             document.getElementById('app-dryer-kwh').value = dryKwh.toFixed(1);
             document.getElementById('app-dryer-cost').value = "£" + dryCost.toFixed(2);
             totalAppKwh += dryKwh; totalAppCost += dryCost;
-            if (dryFreq > 8) addActionRow("Appliance Overuse", "Tumble Dryer frequent usage", "Discuss passive drying alternatives." + waterNote);
+            if (isAppScope && dryFreq > 8) {
+                addActionRow("Appliance Overuse", "Tumble Dryer frequent usage", "Discuss passive drying alternatives." + waterNote);
+            }
 
             // Electric Shower
             const showerMins = parseInt(document.getElementById('app-shower').value) || 0;
@@ -1029,15 +1028,20 @@
             document.getElementById('app-shower-kwh').value = showerKwh.toFixed(1);
             document.getElementById('app-shower-cost').value = "£" + showerCost.toFixed(2);
             totalAppKwh += showerKwh; totalAppCost += showerCost;
-            if (showerMins > 300 && totalOcc <= 2) addActionRow("Appliance Overuse", "Electric Shower > 10 mins per person/day", "Provide 4-minute shower timers." + waterNote);
+            if (isAppScope && showerMins > 300 && totalOccupants <= 2) {
+                addActionRow("Appliance Overuse", "Electric Shower > 10 mins per person/day", "Provide 4-minute shower timers." + waterNote);
+            }
 
             // Fridge/Freezer
-            const fridgeKwh = parseInt(document.getElementById('app-fridge').value) || 0;
+            const fridgeVal = parseInt(document.getElementById('app-fridge').value) || 0;
+            const fridgeKwh = fridgeVal;
             const fridgeCost = (fridgeKwh * unitRateCalc) / 100;
             document.getElementById('app-fridge-kwh').value = fridgeKwh.toFixed(1);
             document.getElementById('app-fridge-cost').value = "£" + fridgeCost.toFixed(2);
             totalAppKwh += fridgeKwh; totalAppCost += fridgeCost;
-            if (fridgeKwh > 50) addActionRow("Appliance Efficiency", "Fridge/Freezer old or faulty", "Check seal / Defrost / Ensure ventilation.");
+            if (isAppScope && fridgeKwh > 50) {
+                addActionRow("Appliance Efficiency", "Fridge/Freezer old or faulty", "Check seal / Defrost / Ensure ventilation.");
+            }
 
             // Plug-in Heaters
             const hQty = parseInt(document.getElementById('app-heater-qty').value) || 0;
@@ -1047,26 +1051,285 @@
             document.getElementById('app-heater-kwh').value = hKwh.toFixed(1);
             document.getElementById('app-heater-cost').value = "£" + hCost.toFixed(2);
             totalAppKwh += hKwh; totalAppCost += hCost;
-            if (hKwh > 100) addActionRow("Heating Behavior", "High reliance on plug-in heaters", "Extremely expensive point-source heating. Diagnose primary heating failure.");
+            if (isAppScope && hKwh > 100) {
+                addActionRow("Heating Behavior", "High reliance on plug-in heaters", "Extremely expensive point-source heating. Diagnose primary heating failure.");
+            }
 
             // Oven
             const ovenHrs = parseInt(document.getElementById('app-oven').value) || 0;
             const ovenKwh = ovenHrs * 3;
-            const ovenCost = (ovenKwh * unitRateCalc) / 100;
+            const ovenCost = (ovenHrs * unitRateCalc) / 100;
             document.getElementById('app-oven-kwh').value = ovenKwh.toFixed(1);
             document.getElementById('app-oven-cost').value = "£" + ovenCost.toFixed(2);
             totalAppKwh += ovenKwh; totalAppCost += ovenCost;
-            if (ovenHrs > 84) addActionRow("Appliance Overuse", "High Electric Oven/Hob usage", "Advise use of microwave, slow cooker, or air fryer for efficiency.");
+            if (isAppScope && ovenHrs > 84) {
+                addActionRow("Appliance Overuse", "High Electric Oven/Hob usage", "Advise use of microwave, slow cooker, or air fryer for efficiency.");
+            }
 
             document.getElementById('app-total-kwh').value = totalAppKwh.toFixed(1);
             document.getElementById('app-total-cost').value = "£" + totalAppCost.toFixed(2);
+
+            // Storage Heating Automations
+            const isElecHeatScope = document.querySelector('input[data-target="sec-elec-heat"]').checked;
+            if (isElecHeatScope && document.querySelector('input[name="e_heat"]:checked')?.value === 'storage') {
+                const age = document.getElementById('storage-age').value;
+                const qty = parseInt(document.getElementById('storage-qty').value) || 1;
+                
+                let kWhPerHeater = 15;
+                if (age === 'modern') kWhPerHeater = 10;
+                if (age === 'outdated') {
+                    kWhPerHeater = 22;
+                    addActionRow("Heating System", "Out of date storage heater", "Upgrade required via social housing provider schemes");
+                }
+
+                const nightRateVal = nightRate > 0 ? nightRate : (dayRate > 0 ? dayRate : 24.5);
+                const estOvernightCost = (qty * kWhPerHeater * nightRateVal) / 100;
+                document.getElementById('calc-overnight-charge').value = "£" + estOvernightCost.toFixed(2);
+            }
+
+            // Gas/Oil Automations & Calculations
+            const isGasScope = document.querySelector('input[data-target="sec-gas"]').checked;
+            if (isGasScope) {
+                if (fuelSelect.value === 'gas') {
+                    const elecSupp = document.getElementById('elec-supplier').value.trim().toLowerCase();
+                    const gasSupp = document.getElementById('gas-supplier').value.trim().toLowerCase();
+                    if (gasSupp !== '' && elecSupp !== '' && gasSupp !== elecSupp) {
+                        addActionRow("Energy Supply", "Gas and electricity suppliers do not match", "Check dual fuel bundle options to reduce standing charges.");
+                    }
+
+                    // Gas Cost Calculation
+                    const gasUsageFormat = document.getElementById('gas-usage-format').value;
+                    const gasUsageInput = parseFloat(document.getElementById('gas-usage-input').value) || 0;
+                    const gasUnitRate = parseFloat(document.getElementById('gas-rate-unit').value) || 0;
+                    const gasScRate = parseFloat(document.getElementById('gas-rate-sc').value) || 0;
+
+                    let annualGasKwh = gasUsageFormat === 'annual' ? gasUsageInput : (gasUsageInput * 12);
+                    let monthlyGasKwh = gasUsageFormat === 'monthly' ? gasUsageInput : (gasUsageInput / 12);
+
+                    let monthlyGasEnergyCost = (monthlyGasKwh * gasUnitRate) / 100;
+                    let monthlyGasSCCost = (gasScRate * 365 / 12) / 100;
+                    let totalGasMonthlyCost = monthlyGasEnergyCost + monthlyGasSCCost;
+
+                    document.getElementById('calc-gas-sc').innerText = `£${monthlyGasSCCost.toFixed(2)} / mo`;
+                    document.getElementById('calc-gas-total').innerText = `£${totalGasMonthlyCost.toFixed(2)} / mo`;
+
+                    // Gas Benchmark Check
+                    if (annualGasKwh > 0) {
+                        let gasBenchmark = 11500;
+                        if (totalOccupants <= 1) gasBenchmark = 7500;
+                        else if (totalOccupants <= 3) gasBenchmark = 11500;
+                        else gasBenchmark = 17000;
+
+                        if (annualGasKwh > (gasBenchmark * 1.05)) {
+                            addActionRow("High Gas Consumption", `Gas usage (${annualGasKwh.toFixed(0)} kWh/yr) exceeds national benchmark (${gasBenchmark} kWh)`, "Review boiler flow temp, room thermostat settings, and TRVs.");
+                            document.getElementById('calc-gas-total').classList.add('alert-red');
+                        } else {
+                            document.getElementById('calc-gas-total').classList.remove('alert-red');
+                        }
+                    }
+                }
+                
+                // Boiler / Tank Service Date Check
+                const serviceDateId = (fuelSelect.value === 'oil') ? 'oil-service-date' : 'boiler-service-date';
+                const serviceDateInput = document.getElementById(serviceDateId);
+                if (serviceDateInput && serviceDateInput.value) {
+                    const sDate = new Date(serviceDateInput.value);
+                    const diffDays = Math.ceil(Math.abs(new Date() - sDate) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 365) {
+                        addActionRow("Heating Servicing", "Exceeds 12 months since last service", "Annual safety and efficiency service required.");
+                    }
+                }
+            }
+
+            // Hot Water Automations
+            const isHotWaterScope = document.querySelector('input[data-target="sec-hot-water"]').checked;
+            if (isHotWaterScope && hwHeatedBy.value !== 'instantaneous' && document.getElementById('hw-control').value === 'continuous') {
+                addActionRow("Hot Water", "Immersion set to 'Continuous'", "High cost alert: Reprogram to off-peak timer");
+            }
+
+            // EV Automations
+            const isEvScope = document.querySelector('input[data-target="sec-ev"]').checked;
+            if (isEvScope && evChargerSelect.value === 'granny') {
+                addActionRow("EV Safety & Cost", "EV charging via standard 3-pin socket ('Granny Charger')", "Review socket load capacity and advise on dedicated home EV charger installation.");
+            }
+
+            // Solar PV Automations
+            const isSolarScope = document.querySelector('input[data-target="sec-solar"]').checked;
+            if (isSolarScope) {
+                const solarRate = parseFloat(document.getElementById('solar-rate').value);
+                if (solarRate > 0 && solarRate < 12) {
+                    addActionRow("Solar PV", `Low Export Rate (${solarRate}p)`, "Consider switching export provider for better SEG rate");
+                }
+
+                if (solarExportStatus.value === 'no') {
+                    if (solarAccountStatus.value === 'none') {
+                        addActionRow("Solar PV", "No Online Account Setup", "Account creation required to apply for export funds");
+                    }
+                    
+                    document.querySelectorAll('.doc-chk').forEach(chk => {
+                        if (!chk.checked) {
+                            addActionRow("Solar PV Docs", `Missing: ${chk.getAttribute('data-doc')}`, "Obtain document to facilitate export payments");
+                        }
+                    });
+                }
+            }
+
+            // Re-append user's custom manual rows
+            manualRows.forEach(row => registerBody.appendChild(row));
         }
 
+        // --- 3. Event Listeners & UI Logic ---
+
+        // Address Header Sync
+        if (addressInput && headerAddress) {
+            addressInput.addEventListener('input', function() {
+                headerAddress.textContent = this.value;
+            });
+        }
+
+        // Scope Toggles (Checkbox section show/hide)
+        function syncScopeSections() {
+            scopeToggles.forEach(toggle => {
+                const targetId = toggle.getAttribute('data-target');
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.classList.toggle('module-hidden', !toggle.checked);
+                }
+            });
+            runMasterCalculation();
+        }
+        scopeToggles.forEach(t => t.addEventListener('change', syncScopeSections));
+
+        // Add Custom Action Log Item
+        document.getElementById('btn-add-action').addEventListener('click', function() {
+            const tr = document.createElement('tr');
+            tr.className = 'manual-row';
+            tr.innerHTML = `
+                <td><input type="text" placeholder="Category / Item requested by resident"></td>
+                <td><input type="text" placeholder="Recommended Action / Follow-up detail"></td>
+            `;
+            registerBody.appendChild(tr);
+        });
+
+        // Electric Heating Sub-type Toggles (Storage vs ASHP)
+        eHeatRadios.forEach(r => {
+            r.addEventListener('change', () => {
+                const isStorage = document.querySelector('input[name="e_heat"]:checked').value === 'storage';
+                subStorage.classList.toggle('module-hidden', !isStorage);
+                subAshp.classList.toggle('module-hidden', isStorage);
+            });
+        });
+
+        // Gas vs Oil Fuel Selection Toggle
+        fuelSelect.addEventListener('change', () => {
+            const isOil = fuelSelect.value === 'oil';
+            rowGasOnly.forEach(row => row.classList.toggle('module-hidden', isOil));
+            gasCalcWrapper.classList.toggle('module-hidden', isOil);
+            rowOil.classList.toggle('module-hidden', !isOil);
+            runMasterCalculation();
+        });
+
+        // Hot Water Instantaneous Toggle
+        function updateHotWaterView() {
+            const isInstant = hwHeatedBy.value === 'instantaneous';
+            hwConditionalRows.forEach(row => row.classList.toggle('module-hidden', isInstant));
+        }
+        hwHeatedBy.addEventListener('change', updateHotWaterView);
+
+        // EV Charger Visibility Toggle
+        function updateEvView() {
+            const isNone = evChargerSelect.value === 'none';
+            evConditionalRows.forEach(row => row.classList.toggle('module-hidden', isNone));
+        }
+        evChargerSelect.addEventListener('change', updateEvView);
+
+        // Tariff End Date Auto Dropdowns (Electricity & Gas) - Updated with fixed tariff exit fees
+        function generateTariffDates(structureVal, targetSelect) {
+            targetSelect.innerHTML = '';
+            if (structureVal === 'variable') {
+                const d = new Date();
+                const m = d.getMonth() + 1;
+                let nextCap = "1st January (Next Year)";
+                if (m < 4) nextCap = "1st April";
+                else if (m < 7) nextCap = "1st July";
+                else if (m < 9) nextCap = "1st September";
+                
+                const opt = document.createElement('option');
+                opt.value = nextCap;
+                opt.text = "Next Ofgem Cap: " + nextCap;
+                targetSelect.appendChild(opt);
+            } else {
+                const d = new Date();
+                for (let i = 0; i < 24; i++) {
+                    const tempD = new Date(d.getFullYear(), d.getMonth() + i, 1);
+                    const monthStr = tempD.toLocaleString('default', { month: 'long', year: 'numeric' });
+                    const opt = document.createElement('option');
+                    opt.value = monthStr;
+                    opt.text = "Ends: " + monthStr;
+                    targetSelect.appendChild(opt);
+                }
+            }
+        }
+
+        function updateElecDateDropdown() {
+            generateTariffDates(structureSelect.value, dateSelect);
+        }
+        function updateGasDateDropdown() {
+            generateTariffDates(gasStructureSelect.value, gasDateSelect);
+        }
+
+        // Fixed Tariff Exit Fee Toggles (NEW from EnergyAdvice 10)
+        structureSelect.addEventListener('change', () => {
+            const isFixed = structureSelect.value === 'fixed';
+            elecExitFeeRow.classList.toggle('module-hidden', !isFixed);
+            updateElecDateDropdown();
+        });
+        
+        gasStructureSelect.addEventListener('change', () => {
+            const isFixed = gasStructureSelect.value === 'fixed';
+            rowGasExitFee.classList.toggle('module-hidden', !isFixed);
+            updateGasDateDropdown();
+        });
+
+        // Single vs Dual Rate Toggle
+        rateTypeSelect.addEventListener('change', (e) => {
+            const isDual = e.target.value === 'dual';
+            nightRateInput.disabled = !isDual;
+            rowDualSplit.classList.toggle('module-hidden', !isDual);
+        });
+
+        // Solar Export & Account Logic
+        function updateSolarVisibility() {
+            const isNoExport = solarExportStatus.value === 'no';
+            rowSolarAccount.classList.toggle('module-hidden', !isNoExport);
+            solarDocsWrapper.classList.toggle('module-hidden', !isNoExport);
+
+            const isNoAccount = solarAccountStatus.value === 'none';
+            if (isNoExport && isNoAccount) {
+                rowSolarPayment.classList.add('disabled-block');
+                solarDocsWrapper.classList.add('disabled-block');
+            } else {
+                rowSolarPayment.classList.remove('disabled-block');
+                solarDocsWrapper.classList.remove('disabled-block');
+            }
+            runMasterCalculation();
+        }
+        solarExportStatus.addEventListener('change', updateSolarVisibility);
+        solarAccountStatus.addEventListener('change', updateSolarVisibility);
+
+        // Attach global calculation trigger
         document.querySelectorAll('.trigger-calc').forEach(el => {
             el.addEventListener('input', runMasterCalculation);
             el.addEventListener('change', runMasterCalculation);
         });
 
+        // --- 4. Initialization ---
+        syncScopeSections();
+        updateHotWaterView();
+        updateEvView();
+        updateElecDateDropdown();
+        updateGasDateDropdown();
+        updateSolarVisibility();
         runMasterCalculation();
     });
 </script>

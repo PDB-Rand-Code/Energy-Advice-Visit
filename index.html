@@ -2,1646 +2,1336 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clerk of Works Inspection Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rand Associates - Domestic Energy & Retrofit Assessment Tool</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 8px;
+            margin: 20px;
+            padding: 20px;
             color: #333;
-            background-color: #f4f6f8;
-            font-size: 13px;
-            line-height: 1.35;
-            -webkit-tap-highlight-color: transparent;
+            background-color: #f9f9f9;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: #fff;
-            padding: 18px;
+            padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
-        /* Fixed Top Action Toolbar for Tablet/Mobile Convenience */
-        .top-action-bar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: #004080;
-            color: #fff;
-            padding: 10px 15px;
-            margin: -18px -18px 18px -18px;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-        }
-
-        .action-title {
-            font-weight: bold;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn-action-top {
-            background-color: #ffffff;
-            color: #004080;
-            border: none;
-            padding: 8px 14px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .btn-action-top:hover, .btn-action-top:active {
-            background-color: #e6f0fa;
-            transform: translateY(-1px);
-        }
-
-        .btn-action-top.btn-primary {
-            background-color: #28a745;
-            color: #ffffff;
-        }
-
-        .btn-action-top.btn-primary:hover {
-            background-color: #218838;
-        }
-
-        .tablet-tip {
-            font-size: 11px;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 4px 8px;
-            border-radius: 4px;
-            color: #e6f0fa;
-        }
-
-        /* Header Layout with Logo */
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #004080;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-            gap: 15px;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
         .header-top h1 {
             color: #004080;
             margin: 0;
-            border: none;
             padding: 0;
-            font-size: 20px;
+            font-size: 26px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .header-top p {
-            margin: 3px 0 0 0;
+            margin: 4px 0 0 0;
+            font-weight: 600;
             color: #555;
+        }
+        .header-logo {
+            max-height: 75px;
+            width: auto;
+            object-fit: contain;
         }
         #header-address {
             font-weight: bold;
             color: #004080;
-            font-size: 1em;
-            margin-top: 5px;
-            min-height: 18px;
+            font-size: 1.1em;
+            margin-top: 8px;
+            min-height: 20px;
         }
-        .logo-img {
-            height: 55px;
-            object-fit: contain;
-        }
-
-        h2 {
+        h2, h3 {
             color: #004080;
             border-bottom: 2px solid #004080;
-            padding-bottom: 4px;
-            margin-top: 25px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            font-size: 15px;
+            padding-bottom: 5px;
+            margin-top: 40px;
         }
-        
-        h3 {
-            color: #004080;
-            font-size: 13.5px;
-            margin: 12px 0 6px 0;
-        }
-
-        h4 { 
-            color: #333; 
-            margin-top: 15px; 
-            margin-bottom: 8px; 
-            font-size: 12px; 
-            display: flex; 
-            align-items: center; 
-            flex-wrap: wrap; 
-            gap: 8px; 
-        }
-
-        .b-reg-ref {
-            display: block;
-            margin-top: 3px;
-            font-size: 0.78em;
-            color: #777;
-            font-style: italic;
-        }
-
-        /* Accordion Styles */
-        .accordion-header {
-            background-color: #e6f0fa;
-            color: #004080;
-            padding: 10px 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            border: 1px solid #b3d1ff;
-            transition: background-color 0.2s ease;
-            user-select: none;
-        }
-        .accordion-header:hover {
-            background-color: #cce0ff;
-        }
-        .accordion-header h3 {
-            margin: 0;
-            border: none;
-            padding: 0;
-            font-size: 13px;
-        }
-        .accordion-content {
-            display: none;
-            padding-top: 8px;
-        }
-        .accordion-icon {
-            font-size: 1.3em;
-            font-weight: bold;
-            line-height: 1;
-        }
-        
         .table-wrapper {
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 5px;
-            min-width: 500px;
+            margin-top: 10px;
         }
         th, td {
             border: 1px solid #ccc;
-            padding: 6px 8px;
+            padding: 12px;
             text-align: left;
-            vertical-align: top;
-            font-size: 12.5px;
+            vertical-align: middle;
         }
         th {
             background-color: #f2f2f2;
             font-weight: bold;
+            width: 25%;
         }
         .center { text-align: center; }
         
-        /* Touch target sizing for Tablets and Phones */
-        input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+        input[type="checkbox"], input[type="radio"] {
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            accent-color: #004080;
+            vertical-align: middle;
         }
-        input[type="text"], input[type="date"], textarea, select {
-            width: 100%;
-            padding: 6px 8px;
+        input[type="text"], input[type="date"], input[type="number"], textarea, select {
+            width: 95%;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 12.5px;
+            font-size: 15px;
             font-family: inherit;
             box-sizing: border-box;
         }
-        textarea {
-            resize: none;
-            overflow: hidden !important;
-            min-height: 38px;
-            box-sizing: border-box;
-        }
-        .finding-input {
-            min-height: 38px;
-        }
-        .custom-row-input {
-            min-height: 38px;
-            border: 1px dashed #999;
-            background-color: #fcfcfc;
-        }
-        .notes-area { min-height: 80px; width: 100%; }
-        
-        .auto-populated {
-            background-color: #fff3e6;
-        }
-        .custom-finding-row {
-            background-color: #e6ffe6;
-        }
-
-        .btn-add, .btn-photo {
-            background-color: #004080;
-            color: #fff;
-            border: none;
-            padding: 10px 16px;
-            font-size: 13.5px;
+        .calc-output {
+            background-color: #eef7ff;
             font-weight: bold;
+            color: #004080;
+        }
+        .calculated-value {
+            font-weight: bold;
+            color: #004080;
+            background-color: #f8faf9;
+        }
+        .totals-row th, .totals-row td {
+            background-color: #e6f0fa;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .auto-populated { background-color: #fff3e6; }
+        .manual-row { background-color: #f0fdf4; }
+        .module-hidden { display: none !important; }
+        .disabled-block { opacity: 0.4; pointer-events: none; background-color: #f2f2f2; }
+        .alert-red { background-color: #ffe6e6 !important; color: #cc0000 !important; font-weight: bold; }
+        
+        .btn-action {
+            background-color: #004080;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
             border-radius: 4px;
             cursor: pointer;
-            margin-bottom: 15px;
-            min-height: 38px;
-            display: inline-block;
-        }
-        .btn-add:hover, .btn-photo:hover {
-            background-color: #00264d;
-        }
-        
-        .location-select {
-            width: 180px;
-            padding: 4px 6px;
-            font-size: 12px;
-        }
-
-        .fan-header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f0f4f8;
-            padding: 6px 10px;
-            border-radius: 4px;
-            border-left: 4px solid #004080;
-            margin-top: 15px;
-            margin-bottom: 8px;
-        }
-
-        .fan-header-container h4 {
-            margin: 0;
-        }
-
-        /* Photo Grid Layout */
-        .photo-upload-container {
-            margin-bottom: 20px;
-        }
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            font-weight: bold;
             margin-top: 10px;
         }
-        .photo-card {
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            padding: 10px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        .btn-action:hover {
+            background-color: #002850;
         }
-        .photo-card img {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            background: #eee;
-        }
-        .photo-card-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-        .photo-ref-select {
-            width: 140px; 
-            padding: 4px;
-            font-size: 12px;
-        }
-        .btn-remove-photo, .btn-remove-fan {
-            background-color: #d9534f;
+        .btn-delete {
+            background-color: #cc0000;
             color: white;
             border: none;
-            padding: 6px 10px;
             border-radius: 4px;
+            padding: 6px 12px;
             cursor: pointer;
-            min-height: 32px;
-            font-size: 12px;
-        }
-        .btn-remove-row {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            min-height: 30px;
             font-weight: bold;
-            font-size: 11px;
-        }
-        .btn-remove-photo:hover, .btn-remove-row:hover, .btn-remove-fan:hover {
-            background-color: #c9302c;
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .top-action-bar { flex-direction: column; align-items: stretch; }
-            .action-buttons { justify-content: space-between; }
-            .photo-grid { grid-template-columns: 1fr; }
+        .declaration-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.5;
         }
 
-        /* --- STRICT PRINT & PDF STYLES --- */
-        @page {
-            size: A4 portrait;
-            margin: 10mm 8mm;
+        .checklist-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .checklist-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         @media print {
-            body { 
-                background-color: #fff !important; 
-                margin: 0 !important; 
-                padding: 0 !important; 
-                font-size: 11px !important; 
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .container { 
-                box-shadow: none !important; 
-                padding: 0 !important; 
-                max-width: 100% !important; 
-                width: 100% !important;
-            }
-
-            /* Hide Top Toolbar & Action Controls in Print */
-            .top-action-bar, .no-print, .no-print-col, .btn-add, .btn-photo, .btn-remove-photo, .btn-remove-row, .btn-remove-fan { 
-                display: none !important; 
-            }
-
-            /* Un-restrict Table Wrappers for Print so horizontal scrolling never truncates content */
-            .table-wrapper {
-                overflow: visible !important;
-                display: block !important;
-                margin-bottom: 10px !important;
-            }
-            table {
-                min-width: 100% !important;
-                width: 100% !important;
-                table-layout: fixed !important;
-                page-break-inside: auto;
-            }
-
-            th, td {
-                padding: 4px 6px !important;
-                font-size: 10px !important;
-                word-wrap: break-word !important;
-                overflow-wrap: break-word !important;
-            }
-
-            /* Avoid isolated headings */
-            h1, h2, h3, h4, .fan-header-container { 
-                break-after: avoid !important; 
-                page-break-after: avoid !important; 
-            }
-
-            h1 { font-size: 16px !important; }
-            h2 { font-size: 12.5px !important; margin-top: 14px !important; margin-bottom: 6px !important; }
-            h3 { font-size: 11.5px !important; }
-            h4 { font-size: 10.5px !important; }
-
-            .header-top {
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
-                margin-bottom: 10px !important;
-                padding-bottom: 8px !important;
-            }
-            .logo-img { height: 42px !important; }
-
-            /* Prevent Individual Rows from splitting across pages */
-            tr { 
-                break-inside: avoid !important; 
-                page-break-inside: avoid !important; 
-            }
-
-            .accordion-section {
-                page-break-inside: auto !important;
-                break-inside: auto !important;
-            }
-
-            .fan-section {
-                break-inside: avoid !important;
-                page-break-inside: avoid !important;
-                margin-bottom: 12px !important;
-                display: block !important;
-            }
-
-            #section4-header {
-                page-break-after: avoid !important;
-                break-after: avoid !important;
-            }
-
-            .accordion-section.hidden-section,
-            .notes-area.empty-notes-area,
-            #additional-notes-container.empty-notes-container {
-                display: none !important;
-            }
-
-            /* Force Accordion Content Display in Print */
-            .accordion-content { 
-                display: block !important; 
-            }
-            .accordion-header { 
-                border: 1px solid #000 !important; 
-                background-color: #e6f0fa !important; 
-                padding: 5px 8px !important;
-                margin-top: 8px !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .accordion-icon { 
-                display: none !important; 
-            }
-
-            /* Text & Select Inputs Print Appearance */
-            input[type="text"], input[type="date"], textarea, select { 
-                border: 1px solid #aaa !important; 
-                background: transparent !important; 
-                box-shadow: none !important;
-                font-size: 10px !important;
-                padding: 2px 4px !important;
-                appearance: none !important;
-                -webkit-appearance: none !important;
-            }
-
-            /* STRICT FIX FOR CHECKBOX PRINT VISIBILITY */
-            input[type="checkbox"] {
-                appearance: checkbox !important;
-                -webkit-appearance: checkbox !important;
-                width: 16px !important;
-                height: 16px !important;
-                margin: 0 auto !important;
-                display: inline-block !important;
-                cursor: pointer;
-                accent-color: #004080 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-
-            textarea { 
-                overflow: visible !important; 
-            }
-            .notes-area {
-                min-height: 50px !important;
-            }
-
-            ::placeholder { 
-                color: transparent !important; 
-            }
-
-            /* PHOTO GRID PRINT LAYOUT */
-            .photo-grid {
-                display: block !important; 
-                clear: both !important;
-            }
-            .photo-grid::after {
-                content: "" !important;
-                display: table !important;
-                clear: both !important;
-            }
-            .photo-card { 
-                display: inline-block !important; 
-                float: left !important;
-                width: 48.5% !important; 
-                margin: 0 1.5% 10px 0 !important;
-                padding: 6px !important;
-                box-sizing: border-box !important;
-                vertical-align: top !important;
-                break-inside: avoid !important; 
-                page-break-inside: avoid !important; 
-                -webkit-column-break-inside: avoid !important; 
-            }
-            .photo-card:nth-child(2n) {
-                margin-right: 0 !important;
-            }
-            .photo-card img {
-                width: 100% !important;
-                aspect-ratio: 1 / 1 !important;
-                height: auto !important;
-                object-fit: cover !important;
-                margin-bottom: 4px !important;
-            }
-            .photo-card textarea {
-                min-height: 30px !important;
-                max-height: 55px !important;
-                font-size: 9.5px !important;
-                padding: 2px 4px !important;
-                line-height: 1.2 !important;
-            }
-
-            /* Row Colors */
-            .auto-populated {
-                background-color: #fff3e6 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .custom-finding-row {
-                background-color: #e6ffe6 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
+            body { background-color: #fff; margin: 0; padding: 0; }
+            .container { box-shadow: none; padding: 0; }
+            input, textarea, select, .btn-action, .btn-delete { border: 1px solid #ddd; }
+            .btn-action, .btn-delete { display: none; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-
-    <!-- Top Action Bar (Tablet / Desktop Quick Controls) -->
-    <div class="top-action-bar no-print">
-        <div class="action-title">
-            📋 Clerk of Works Inspection Tool
-        </div>
-        <div class="action-buttons">
-            <span class="tablet-tip">📱 Tablet Tip: Tap Print, then pinch preview outward to save PDF</span>
-            <button type="button" class="btn-action-top" id="btn-toggle-accordions">↔️ Expand All</button>
-            <button type="button" class="btn-action-top btn-primary" id="btn-trigger-print">🖨️ Print / Save PDF</button>
-        </div>
-    </div>
-
-    <!-- Header with Title and Logo -->
     <div class="header-top">
         <div>
-            <h1>CLERK OF WORKS INSPECTION REPORT</h1>
+            <h1>RAND ASSOCIATES</h1>
+            <p>Energy Advice Visit – Resident Checklist</p>
             <div id="header-address"></div>
         </div>
-        <div>
-            <img src="rand-logo.png" alt="Rand Associates Logo" class="logo-img" onerror="this.style.display='none'">
-        </div>
+        <img src="rand-logo.png" alt="Rand Associates Logo" class="header-logo" onerror="this.style.display='none'">
     </div>
 
-    <!-- SECTION 1 -->
-    <h2>1. GENERAL OVERVIEW</h2>
+    <!-- GENERAL SECTION -->
+    <h2>GENERAL</h2>
     <div class="table-wrapper">
         <table>
             <tr>
-                <th style="width: 18%;">Date of Inspection:</th>
-                <td style="width: 32%;"><input type="date" id="inspection-date"></td>
-                <th style="width: 18%;">Inspected By:</th>
-                <td style="width: 32%;"><input type="text" placeholder="Inspector Name"></td>
+                <th>Resident Name:</th>
+                <td><input type="text"></td>
+                <th>Date:</th>
+                <td><input type="date"></td>
             </tr>
             <tr>
-                <th>Contractor Name:</th>
-                <td><input type="text" placeholder="Contractor Company"></td>
-                <th>Inspection Reference:</th>
-                <td><input type="text" value="1 of 1"></td>
+                <th rowspan="2">Address:</th>
+                <td rowspan="2"><textarea id="prop-address" placeholder="Enter full address..." style="height: 100px;"></textarea></td>
+                <th>Occupancy (Adults):</th>
+                <td><input type="number" id="occ-adults" class="trigger-calc" value="1" min="1"></td>
             </tr>
             <tr>
-                <th>Property Address:</th>
-                <td colspan="3"><textarea id="prop-address" placeholder="Enter full property address..."></textarea></td>
+                <th>Occupancy (Children):</th>
+                <td><input type="number" id="occ-children" class="trigger-calc" value="0" min="0"></td>
+            </tr>
+            <tr>
+                <th>Advisor:</th>
+                <td><input type="text" placeholder="Advisor Name"></td>
+                <th>Demographics:</th>
+                <td>
+                    <label><input type="checkbox" id="psr-child" class="trigger-calc"> Child &lt; 5 in property</label><br>
+                    <label style="margin-top: 5px; display: inline-block;"><input type="checkbox" id="psr-adult" class="trigger-calc"> Adult &gt; 65 in property</label>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="4" style="text-align: center; background: #e6f0fa;">Assessment Scope (Select to include sections)</th>
+            </tr>
+            <tr>
+                <td colspan="4" class="center" style="line-height: 2.2em;">
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-elec" checked> Electricity Supply </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-app" checked> Appliance Usage </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-gas"> Gas/Oil Heating </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-elec-heat"> Electric Heating </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-hot-water"> Hot Water </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-solar"> Solar PV </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-battery"> Battery </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-ev"> EV </label>
+                </td>
             </tr>
         </table>
     </div>
 
-    <!-- SECTION 2: MAIN REGISTER -->
-    <h2>2. MAIN INSPECTIONS AND FINDINGS</h2>
-    <p><em>This register automatically populates defects and non-compliances when "Action Req." is ticked below. You can also manually add custom findings using the button below.</em></p>
+    <!-- ACTION LOG -->
+    <h2>ACTION LOG</h2>
+    <p><em>Automatically captures identified risks and allows custom advisor inputs.</em></p>
     <div class="table-wrapper">
-        <table>
+        <table id="action-log-table">
             <thead>
                 <tr>
-                    <th style="width: 50px;">No.</th>
-                    <th style="width: 250px;">Component</th>
-                    <th>Inspection Finding</th>
-                    <th style="width: 75px;" class="center no-print-col">Action</th>
+                    <th style="width: 40%;">Category & Item</th>
+                    <th style="width: 60%;">Recommended Remedial Action / Advice</th>
                 </tr>
             </thead>
             <tbody id="remedial-register-body">
-                <!-- Rows injected dynamically via JS -->
+                <!-- Dynamic rows injected here -->
             </tbody>
         </table>
-    </div>
-    <!-- Custom Finding Button -->
-    <button type="button" id="btn-add-custom-finding" class="btn-add">+ Add Custom Finding</button>
-    
-    <div id="additional-notes-container">
-        <h3>Additional Notes</h3>
-        <textarea class="notes-area" id="additional-notes-textarea" placeholder="Enter any additional general site observations..."></textarea>
+        <button type="button" id="btn-add-action" class="btn-action">+ Add Custom Action Item</button>
     </div>
 
-    <!-- SECTION 3: SITE PHOTOGRAPHS -->
-    <h2>3. SITE PHOTOGRAPHS & DEFECT REFERENCES</h2>
-    <div class="photo-upload-container">
-        <p><em>Upload photos from your gallery or take pictures directly using your phone/tablet camera. Use the 'Ref' dropdown to link photos to items in the register above.</em></p>
-        <input type="file" id="photo-file-input" accept="image/*" multiple style="display: none;">
-        <button type="button" class="btn-photo" id="btn-add-photos">📷 Upload / Take Photos</button>
-        <div class="photo-grid" id="photo-grid">
-            <!-- Photos dynamically added here -->
+    <!-- ELECTRICITY SUPPLY & TARIFF -->
+    <div id="sec-elec">
+        <h2>ELECTRICITY SUPPLY & TARIFF</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Energy Supplier</th>
+                    <td><input type="text" id="elec-supplier" class="trigger-calc" placeholder="e.g., Octopus, British Gas"></td>
+                    <th>Payment Method</th>
+                    <td>
+                        <select id="payment-method" class="trigger-calc">
+                            <option value="direct_debit_var">Variable Direct Debit</option>
+                            <option value="direct_debit_std">Standard Direct Debit</option>
+                            <option value="prepay">Pay As You Go (Prepay)</option>
+                            <option value="bill">Pay Monthly (On Receipt of Bill)</option>
+                            <option value="not_paying">Not currently contributing to energy bills</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Tariff Structure</th>
+                    <td>
+                        <select id="tariff-structure" class="trigger-calc">
+                            <option value="variable">Variable (Price Cap)</option>
+                            <option value="fixed">Fixed</option>
+                            <option value="romo">Economy 7 / RO/MO</option>
+                        </select>
+                    </td>
+                    <th>Tariff Change / End Date</th>
+                    <td><select id="tariff-date-select"></select></td>
+                </tr>
+                <tr id="row-elec-exit-fee" class="module-hidden">
+                    <th>Exit Fee Details</th>
+                    <td colspan="3"><input type="text" placeholder="Enter exit fee amount or conditions (e.g., £50)"></td>
+                </tr>
+                <tr>
+                    <th>Rate Type</th>
+                    <td>
+                        <select id="rate-type-select" class="trigger-calc">
+                            <option value="single">Single Rate</option>
+                            <option value="dual">Dual Rate (Day and Night)</option>
+                        </select>
+                    </td>
+                    <th>Billing Method</th>
+                    <td>
+                        <select id="billing-method">
+                            <option value="paper">Paper Bills</option>
+                            <option value="in_app">In-App</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            
+            <h4 style="margin-top: 15px;">Calculations & Usage (Before Tax)</h4>
+            <table>
+                <tr>
+                    <th>Usage Input Format</th>
+                    <td>
+                        <select id="usage-format" class="trigger-calc">
+                            <option value="annual">Estimated Annual Usage (kWh)</option>
+                            <option value="monthly">Estimated Monthly Usage (kWh)</option>
+                        </select>
+                    </td>
+                    <th>Total Usage Input</th>
+                    <td><input type="number" id="usage-input" class="trigger-calc" placeholder="Total kWh"></td>
+                </tr>
+                <tr id="row-dual-split" class="module-hidden">
+                    <th>Day Usage (kWh)</th>
+                    <td><input type="number" id="usage-day" class="trigger-calc" placeholder="Day kWh"></td>
+                    <th>Night Usage (kWh)</th>
+                    <td><input type="number" id="usage-night" class="trigger-calc" placeholder="Night kWh"></td>
+                </tr>
+                <tr>
+                    <th>Day Unit Rate (p/kWh)</th>
+                    <td><input type="number" step="0.01" id="rate-day" class="trigger-calc" placeholder="pence per unit"></td>
+                    <th>Night Unit Rate (p/kWh)</th>
+                    <td><input type="number" step="0.01" id="rate-night" class="trigger-calc" placeholder="Dual rate only" disabled></td>
+                </tr>
+                <tr>
+                    <th>Standing Charge (p/day)</th>
+                    <td><input type="number" step="0.01" id="rate-sc" class="trigger-calc" placeholder="pence per day"></td>
+                    <th>Calculated Standing Charge (Per Month)</th>
+                    <td><input type="text" id="calc-sc" class="calc-output" readonly placeholder="£0.00"></td>
+                </tr>
+                <tr>
+                    <th>Calculated Energy Cost (Per Month)</th>
+                    <td><input type="text" id="calc-energy" class="calc-output" readonly placeholder="£0.00"></td>
+                    <th>Total Estimated Monthly Cost</th>
+                    <td><input type="text" id="calc-total" class="calc-output" readonly placeholder="£0.00"></td>
+                </tr>
+            </table>
         </div>
     </div>
 
-    <!-- SECTION 4: MODULAR CHECKLISTS -->
-    <h2 id="section4-header">4. ON-SITE CHECKLIST</h2>
-    
-    <!-- SOLAR PV ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Solar PV Panels</h3>
-            <span class="accordion-icon">+</span>
+    <!-- APPLIANCE USAGE -->
+    <div id="sec-app">
+        <h2>APPLIANCE USAGE</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Energy Debt / Arrears Status</th>
+                    <td colspan="3">
+                        <select id="debt-status" class="trigger-calc" style="width: 50%;">
+                            <option value="0">No Arrears</option>
+                            <option value="150">Under £150</option>
+                            <option value="500">£150 - £1,000 (Supplier Switch blocked)</option>
+                            <option value="1000">£1,000 - £1,500 (Supplier Switch blocked)</option>
+                            <option value="5000">£1,500 - £5,000+ (Supplier Switch blocked)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Appliance</th>
+                    <th>Frequency / Setup (Avg Month)</th>
+                    <th>Est. kWh / Month</th>
+                    <th>Est. Cost / Month</th>
+                </tr>
+                <tr>
+                    <td><strong>Washing Machine</strong> (Avg 0.7 kWh/cycle)</td>
+                    <td>
+                        <select id="app-wash" class="trigger-calc app-select">
+                            <option value="0">None</option>
+                            <option value="4">1 per week</option>
+                            <option value="12">3 per week</option>
+                            <option value="28">1 per day</option>
+                            <option value="56">2+ per day</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="app-wash-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-wash-cost" readonly class="calc-output"></td>
+                </tr>
+                <tr>
+                    <td><strong>Tumble Dryer</strong> (Avg 2.5 kWh/cycle)</td>
+                    <td>
+                        <select id="app-dryer" class="trigger-calc app-select">
+                            <option value="0">None</option>
+                            <option value="4">1 per week</option>
+                            <option value="12">3 per week</option>
+                            <option value="28">1 per day</option>
+                            <option value="56">2+ per day</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="app-dryer-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-dryer-cost" readonly class="calc-output"></td>
+                </tr>
+                <tr>
+                    <td><strong>Electric Shower</strong> (Avg 8.5kW)</td>
+                    <td>
+                        <select id="app-shower" class="trigger-calc app-select">
+                            <option value="0">No Electric Shower</option>
+                            <option value="140">5 mins/day (Total Household)</option>
+                            <option value="420">15 mins/day (Total Household)</option>
+                            <option value="840">30 mins/day (Total Household)</option>
+                            <option value="1680">60+ mins/day (Total Household)</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="app-shower-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-shower-cost" readonly class="calc-output"></td>
+                </tr>
+                <tr>
+                    <td><strong>Fridge/Freezer</strong> (24/7 Run)</td>
+                    <td>
+                        <select id="app-fridge" class="trigger-calc app-select">
+                            <option value="15">New / Efficient</option>
+                            <option value="45">Old / Standard</option>
+                            <option value="75">Broken seal / Freezing over / Poor vent</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="app-fridge-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-fridge-cost" readonly class="calc-output"></td>
+                </tr>
+                <tr>
+                    <td><strong>Plug-in Heaters</strong> (Avg 2kW)</td>
+                    <td>
+                        Qty: <input type="number" id="app-heater-qty" class="trigger-calc" value="0" min="0" style="width: 50px; padding: 5px;"> 
+                        Hrs/Day: <input type="number" id="app-heater-hrs" class="trigger-calc" value="0" min="0" style="width: 50px; padding: 5px;">
+                    </td>
+                    <td><input type="text" id="app-heater-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-heater-cost" readonly class="calc-output"></td>
+                </tr>
+                <tr>
+                    <td><strong>Electric Oven/Hob</strong> (Avg 3kW)</td>
+                    <td>
+                        <select id="app-oven" class="trigger-calc app-select">
+                            <option value="0">Not Electric</option>
+                            <option value="14">30 mins / day</option>
+                            <option value="28">1 hour / day</option>
+                            <option value="56">2 hours / day</option>
+                            <option value="84">3 hours / day</option>
+                            <option value="112">4 hours / day</option>
+                            <option value="140">5 hours / day</option>
+                        </select>
+                    </td>
+                    <td><input type="text" id="app-oven-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-oven-cost" readonly class="calc-output"></td>
+                </tr>
+                <tr class="totals-row">
+                    <td colspan="2" style="text-align: right;"><strong>Estimated Appliance Totals (Monthly):</strong></td>
+                    <td><input type="text" id="app-total-kwh" readonly class="calc-output"></td>
+                    <td><input type="text" id="app-total-cost" readonly class="calc-output"></td>
+                </tr>
+            </table>
         </div>
-        <div class="accordion-content">
-            <div class="table-wrapper">
+    </div>
+
+    <!-- ELECTRIC HEATING -->
+    <div id="sec-elec-heat" class="module-hidden">
+        <h2>ELECTRIC HEATING</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Primary System</th>
+                    <td colspan="3">
+                        <label><input type="radio" name="e_heat" value="storage" class="trigger-calc" checked> Night Storage Heaters</label> &nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="e_heat" value="ashp" class="trigger-calc"> Air Source Heat Pump (ASHP)</label>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Storage Heater Module -->
+            <table id="sub-storage">
+                <tr>
+                    <th>System Age / Type</th>
+                    <td>
+                        <select id="storage-age" class="trigger-calc">
+                            <option value="modern">Modern Quantum / Smart Controls</option>
+                            <option value="standard">Standard Manual Controls</option>
+                            <option value="outdated">Out of date storage heater</option>
+                        </select>
+                    </td>
+                    <th>Number of Heaters Used</th>
+                    <td><input type="number" id="storage-qty" min="1" value="1" class="trigger-calc"></td>
+                </tr>
+                <tr>
+                    <th>Night/Day Tariff Split (%)</th>
+                    <td><input type="text" id="night-split-output" readonly placeholder="Auto-calculated" class="calc-output"></td>
+                    <th>Est. Overnight Charge / Night</th>
+                    <td><input type="text" id="calc-overnight-charge" readonly class="calc-output" placeholder="£0.00"></td>
+                </tr>
+                <tr>
+                    <th>Configuration Checklist</th>
+                    <td colspan="3">
+                        <div class="checklist-group">
+                            <label><input type="checkbox"> Time and Date set correctly</label>
+                            <label><input type="checkbox"> Charge times in line with off-peak tariff window</label>
+                            <label><input type="checkbox"> Open Window setting disabled</label>
+                            <label><input type="checkbox"> Secondary mode enabled</label>
+                            <label><input type="checkbox"> Clearance distances observed for effective operation</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Storage Heating Notes</th>
+                    <td colspan="3">
+                        <textarea placeholder="Enter specific observations or advice regarding night storage heaters..."></textarea>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ASHP Module -->
+            <table id="sub-ashp" class="module-hidden">
+                <tr>
+                    <th>Controls Present</th>
+                    <td>
+                        <label><input type="checkbox"> Main Thermostat</label><br>
+                        <label><input type="checkbox"> TRVs on radiators</label>
+                    </td>
+                    <th>Heat Pump Tariff</th>
+                    <td>
+                        <select>
+                            <option>Unknown</option>
+                            <option>Yes - HP Specific Tariff</option>
+                            <option>No - Standard Tariff</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Target Flow Temp (°C)</th>
+                    <td><input type="number" placeholder="e.g. 45"></td>
+                    <th>System Checks</th>
+                    <td>
+                        <label><input type="checkbox"> Filter cleaning checked</label><br>
+                        <label><input type="checkbox"> Outdoor unit clear of debris</label><br>
+                        <label><input type="checkbox"> Legionella cycle verified</label>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Heat Pump Notes</th>
+                    <td colspan="3">
+                        <textarea placeholder="Enter specific observations or advice regarding the Heat Pump system..."></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- GAS & OIL HEATING -->
+    <div id="sec-gas" class="module-hidden">
+        <h2>GAS & OIL HEATING</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Heating Fuel Type</th>
+                    <td colspan="3">
+                        <select id="heating-fuel" class="trigger-calc">
+                            <option value="gas">Gas</option>
+                            <option value="oil">Oil</option>
+                        </select>
+                    </td>
+                </tr>
+                <!-- Gas-specific tariff and tracking rows -->
+                <tr id="row-gas-tariff-structure" class="row-gas-only">
+                    <th>Tariff Structure</th>
+                    <td>
+                        <select id="gas-tariff-structure" class="trigger-calc">
+                            <option value="variable">Variable (Price Cap)</option>
+                            <option value="fixed">Fixed</option>
+                        </select>
+                    </td>
+                    <th>Tariff Change / End Date</th>
+                    <td><select id="gas-tariff-date-select"></select></td>
+                </tr>
+                <tr id="row-gas-exit-fee" class="row-gas-only module-hidden">
+                    <th>Exit Fee Details</th>
+                    <td colspan="3"><input type="text" placeholder="Enter exit fee amount or conditions (e.g., £50)"></td>
+                </tr>
+                <tr class="row-gas-only">
+                    <th>Energy Company</th>
+                    <td><input type="text" id="gas-supplier" class="trigger-calc" placeholder="Enter gas supplier"></td>
+                    <th>Last Serviced Date</th>
+                    <td><input type="date" id="boiler-service-date" class="trigger-calc"></td>
+                </tr>
+                
+                <!-- Oil-specific rows (hidden by default) -->
+                <tr id="row-oil-tank" class="module-hidden">
+                    <th>Oil Tank Size (Litres)</th>
+                    <td><input type="number" placeholder="e.g. 1000"></td>
+                    <th>Cost of Oil</th>
+                    <td><input type="text" placeholder="e.g. £500 per fill or 60p/litre"></td>
+                </tr>
+                <tr id="row-oil-service" class="module-hidden">
+                    <th>Last Serviced Date</th>
+                    <td colspan="3"><input type="date" id="oil-service-date" class="trigger-calc"></td>
+                </tr>
+                
+                <tr>
+                    <th>Heating Controls Present</th>
+                    <td colspan="3">
+                        <select id="heating-controls-select">
+                            <option value="none">None</option>
+                            <option value="thermostat">Thermostat</option>
+                            <option value="prog_thermostat">Programmable Thermostat</option>
+                            <option value="smart_app">Smart/App Controlled</option>
+                        </select>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <label><input type="checkbox"> TRVs on Radiators</label>
+                        <br><label style="color:#004080; font-weight:bold; margin-top:10px; display:inline-block;"><input type="checkbox" class="action-req-cb trigger-calc" data-category="Heating Controls" data-item="Heating control upgrade recommended via social housing provider"> Missing Controls Requiring Attention (Triggers Action Log)</label>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Gas Usage & Cost Calculations -->
+            <div id="gas-calc-wrapper" class="row-gas-only">
+                <h4 style="margin-top: 15px;">Gas Calculations & Usage (Before Tax)</h4>
                 <table>
                     <tr>
-                        <th>Item Description</th>
-                        <th class="center" style="width: 50px;">Sat.</th>
-                        <th class="center" style="width: 60px;">Action Req.</th>
-                        <th class="center" style="width: 50px;">N/A</th>
-                        <th>Inspection Finding / Reference</th>
-                    </tr>
-                    <tr>
-                        <td>Array Orientation, Pitch & Shading Factor
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-1" data-category="Photovoltaic Solar Panels" data-item="Array Orientation, Pitch & Shading Factor"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-1" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Roof Condition & Fixing Flashing Integrity (No tile/slate damage)
-                            <span class="b-reg-ref">Ref: Part A (Structure) / Part C (Moisture)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-2" data-category="Photovoltaic Solar Panels" data-item="Roof Condition & Fixing Flashing Integrity"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-2" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Inverter Location, Clearances & Proximity of AC/DC Isolators
-                            <span class="b-reg-ref">Ref: Approved Document P (Electrical Safety)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-4" data-category="Photovoltaic Solar Panels" data-item="Inverter Location & Clearances"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-4" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Inverter Fire Detection
-                            <span class="b-reg-ref">Ref: Approved Document B (Fire Safety)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-5" data-category="Photovoltaic Solar Panels" data-item="Inverter Fire Detection"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-5" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Consumer Unit Connection & RCD Protection
-                            <span class="b-reg-ref">Ref: Approved Document P (Electrical Safety)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-6" data-category="Photovoltaic Solar Panels" data-item="Consumer Unit Connection & RCD Protection"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-6" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Appropriate Warning Labelling (Dual Supply Warning)
-                            <span class="b-reg-ref">Ref: Approved Document P (Electrical Safety)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-7" data-category="Photovoltaic Solar Panels" data-item="Warning Labelling"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-7" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Solar Diverter / Battery Storage
-                            <span class="b-reg-ref">Ref: Approved Document P (Electrical Safety)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="solar-8" data-category="Photovoltaic Solar Panels" data-item="Battery Storage System"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-solar-8" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- CAVITY WALL INSULATION ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Cavity Wall Insulation</h3>
-            <span class="accordion-icon">+</span>
-        </div>
-        <div class="accordion-content">
-            <div class="table-wrapper">
-                <table>
-                    <tr>
-                        <th>Item Description</th>
-                        <th class="center" style="width: 50px;">Sat.</th>
-                        <th class="center" style="width: 60px;">Action Req.</th>
-                        <th class="center" style="width: 50px;">N/A</th>
-                        <th>Inspection Finding / Reference</th>
-                    </tr>
-                    <tr>
-                        <td>External Wall & Render/Masonry Condition
-                            <span class="b-reg-ref">Ref: Part C (Site preparation and resistance to contaminants and moisture)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="cwi-1" data-category="Cavity Wall Insulation" data-item="External Wall Condition"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-cwi-1" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Injection Hole Drill Pattern
-                            <span class="b-reg-ref">Ref: Part C (Moisture Resistance)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="cwi-2" data-category="Cavity Wall Insulation" data-item="Drill Pattern Compliance"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-cwi-2" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Colour Match Hole Refilling (Render or Mortar)
-                            <span class="b-reg-ref">Ref: Part C (Moisture Resistance)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="cwi-3" data-category="Cavity Wall Insulation" data-item="Color Match Hole Refilling"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-cwi-3" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Dust & Debris in Roof Void / Insulation Blow-through Check
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="cwi-4" data-category="Cavity Wall Insulation" data-item="Dust & Debris in Roof Void"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-cwi-4" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Sub-floor Airbricks & Vents Clear & Unobstructed
-                            <span class="b-reg-ref">Ref: Approved Document F (Ventilation) / Part C</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="cwi-5" data-category="Cavity Wall Insulation" data-item="Sub-floor Airbricks & Vents"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-cwi-5" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-    
-    <!-- WINDOWS & GLAZING ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Windows & Glazing</h3>
-            <span class="accordion-icon">+</span>
-        </div>
-        <div class="accordion-content">
-            <div class="table-wrapper">
-                <table>
-                    <tr>
-                        <th>Item Description</th>
-                        <th class="center" style="width: 50px;">Sat.</th>
-                        <th class="center" style="width: 60px;">Action Req.</th>
-                        <th class="center" style="width: 50px;">N/A</th>
-                        <th>Inspection Finding / Reference</th>
-                    </tr>
-                    <tr>
-                        <td>Frame Material & Overall Profile/Functionality
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-1" data-category="Windows & Glazing" data-item="Frame Material & Functionality"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-1" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Glazing Type & Spec Verification
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-2" data-category="Windows & Glazing" data-item="Glazing Type & Spec Verification"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-2" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Toughened / Safety Glass Requirement Met (&lt;800mm floor / &lt;1500mm door)
-                            <span class="b-reg-ref">Ref: Part K (Protection from falling, collision and impact)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-3" data-category="Windows & Glazing" data-item="Toughened / Safety Glass Requirement"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-3" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Safety Restrictors Installed (Where fall risk exists)
-                            <span class="b-reg-ref">Ref: Part K (Protection from falling) / Part B (Fire Safety Escape)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-4" data-category="Windows & Glazing" data-item="Safety Restrictors"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-4" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>External Perimeter Weather Sealant Bead Continuous
-                            <span class="b-reg-ref">Ref: Part L / Part C (Moisture Resistance)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-5" data-category="Windows & Glazing" data-item="External Weather Sealant Bead"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-5" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Hinge Movement, Track Alignment & Multi-Point Locks
-                            <span class="b-reg-ref">Ref: Part Q (Security)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-6" data-category="Windows & Glazing" data-item="Hinge Movement & Locks"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-6" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Trickle Vents Operational
-                            <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="win-7" data-category="Windows & Glazing" data-item="Trickle Vents Operational"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-win-7" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- LOFT INSULATION ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Loft Insulation & Roof Void Ventilation</h3>
-            <span class="accordion-icon">+</span>
-        </div>
-        <div class="accordion-content">
-            <div class="table-wrapper">
-                <table>
-                    <tr>
-                        <th>Item Description</th>
-                        <th class="center" style="width: 50px;">Sat.</th>
-                        <th class="center" style="width: 60px;">Action Req.</th>
-                        <th class="center" style="width: 50px;">N/A</th>
-                        <th>Inspection Finding / Reference</th>
-                    </tr>
-                    <tr>
-                        <td>Insulation Depth Level Verified (Target 300mm depth)
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="loft-1" data-category="Loft Insulation & Ventilation" data-item="Insulation Depth Level Verified"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-loft-1" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Loft Hatch Insulated & Draft Sealed
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="loft-2" data-category="Loft Insulation & Ventilation" data-item="Loft Hatch Insulated & Sealed"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-loft-2" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Warning Signage Posted at Hatch (Safety/Material/Depth/Date)
-                            <span class="b-reg-ref">Ref: Health & Safety Guidance</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="loft-3" data-category="Loft Insulation & Ventilation" data-item="Warning Signage at Hatch"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-loft-3" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Eaves Ventilation
-                            <span class="b-reg-ref">Ref: Part C / Approved Document F (Ventilation)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="loft-4" data-category="Loft Insulation & Ventilation" data-item="Eaves Ventilation"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-loft-4" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Roof Void Ventilation (Soffit, LAP, Ridgeline vents)
-                            <span class="b-reg-ref">Ref: Part C / Approved Document F (Ventilation)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="loft-5" data-category="Loft Insulation & Ventilation" data-item="Roof Void Ventilation"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-loft-5" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Roof Void Condition: Moisture Ingress, Damp, or Rodent Infestation
-                            <span class="b-reg-ref">Ref: Part C (Site preparation and resistance to moisture)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="loft-6" data-category="Loft Insulation & Ventilation" data-item="Roof Void Condition"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-loft-6" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- MECHANICAL VENTILATION ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Mechanical Ventilation Systems</h3>
-            <span class="accordion-icon">+</span>
-        </div>
-        <div class="accordion-content">
-            <div id="fans-container">
-                <!-- Fan 1 Section -->
-                <div class="fan-section" id="fan-section-1" data-fan-num="1">
-                    <div class="fan-header-container">
-                        <h4>Fan 1 
-                            <select class="location-select fan-location-select" data-fan-num="1">
-                                <option value="">Select Location...</option>
-                                <option value="Kitchen">Kitchen</option>
-                                <option value="Bathroom">Bathroom</option>
-                                <option value="WC">WC</option>
-                                <option value="En-suite">En-suite</option>
-                                <option value="Utility">Utility</option>
+                        <th>Usage Input Format</th>
+                        <td>
+                            <select id="gas-usage-format" class="trigger-calc">
+                                <option value="annual">Estimated Annual Usage (kWh)</option>
+                                <option value="monthly">Estimated Monthly Usage (kWh)</option>
                             </select>
-                        </h4>
-                    </div>
-                    <div class="table-wrapper">
-                        <table>
-                            <tr>
-                                <th>Item Description</th>
-                                <th class="center" style="width: 50px;">Sat.</th>
-                                <th class="center" style="width: 60px;">Action Req.</th>
-                                <th class="center" style="width: 50px;">N/A</th>
-                                <th>Inspection Finding / Reference</th>
-                            </tr>
-                            <tr>
-                                <td>Unit Type (Intermittent / dMEV / MEV / PIV) & Model/ Manufacturer
-                                    <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                                </td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-1-fan1" data-category="Mechanical Ventilation (Fan 1)" data-item="Unit Type & Manufacturer"></td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td><textarea class="finding-input" id="finding-vent-1-fan1" placeholder="Enter findings..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td>Wall or Ceiling Mounting
-                                    <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                                </td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-2-fan1" data-category="Mechanical Ventilation (Fan 1)" data-item="Mounting Security"></td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td><textarea class="finding-input" id="finding-vent-2-fan1" placeholder="Enter findings..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td>Ducting Material (Rigid/Flexi) & Insulation in Cold Voids
-                                    <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                                </td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-3-fan1" data-category="Mechanical Ventilation (Fan 1)" data-item="Ducting Material & Insulation"></td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td><textarea class="finding-input" id="finding-vent-3-fan1" placeholder="Enter findings..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td>Local Fused Isolation Switch
-                                    <span class="b-reg-ref">Ref: Approved Document P (Electrical Safety)</span>
-                                </td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-4-fan1" data-category="Mechanical Ventilation (Fan 1)" data-item="Isolation Switch Installed"></td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td><textarea class="finding-input" id="finding-vent-4-fan1" placeholder="Enter findings..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td>External Ducting Grille
-                                    <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                                </td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-5-fan1" data-category="Mechanical Ventilation (Fan 1)" data-item="External Ducting Grille"></td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td><textarea class="finding-input" id="finding-vent-5-fan1" placeholder="Enter findings..."></textarea></td>
-                            </tr>
-                            <tr>
-                                <td>Measured Trickle & Boost Airflow Rates
-                                    <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                                </td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-6-fan1" data-category="Mechanical Ventilation (Fan 1)" data-item="Trickle & Boost Airflow Rates"></td>
-                                <td class="center"><input type="checkbox"></td>
-                                <td><textarea class="finding-input" id="finding-vent-6-fan1" placeholder="Enter findings..."></textarea></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <button type="button" id="btn-add-fan" class="btn-add">+ Add Another Fan</button>
-        </div>
-    </div>
-
-    <!-- HEATING & HOT WATER ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Heating & Hot Water Systems</h3>
-            <span class="accordion-icon">+</span>
-        </div>
-        <div class="accordion-content">
-            <div class="table-wrapper">
-                <table>
-                    <tr>
-                        <th>Item Description</th>
-                        <th class="center" style="width: 50px;">Sat.</th>
-                        <th class="center" style="width: 60px;">Action Req.</th>
-                        <th class="center" style="width: 50px;">N/A</th>
-                        <th>Inspection Finding / Reference</th>
+                        </td>
+                        <th>Total Usage Input</th>
+                        <td><input type="number" id="gas-usage-input" class="trigger-calc" placeholder="Total kWh"></td>
                     </tr>
                     <tr>
-                        <td>Heating Unit Type (High-Heat Retention Storage / Heat Pump / Boiler)
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="heat-1" data-category="Heating & Hot Water" data-item="Heating Unit Type"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-heat-1" placeholder="Enter findings..."></textarea></td>
+                        <th>Rate per kWh (p)</th>
+                        <td><input type="number" step="0.01" id="gas-rate-unit" class="trigger-calc" placeholder="e.g. 6.8"></td>
+                        <th>Standing Charge (p/day)</th>
+                        <td><input type="number" step="0.01" id="gas-rate-sc" class="trigger-calc" placeholder="e.g. 30.0"></td>
                     </tr>
                     <tr>
-                        <td>Manufacturer, Model & Consumer Unit Connection
-                            <span class="b-reg-ref">Ref: Part P (Electrical Safety) / Part L</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="heat-2" data-category="Heating & Hot Water" data-item="Manufacturer & Unit Connection"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-heat-2" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>System Controls & Warranty Integrity
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="heat-3" data-category="Heating & Hot Water" data-item="System Controls & Warranty"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-heat-3" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Secondary Heating System Type & Location
-                            <span class="b-reg-ref">Ref: Part J (Combustion appliances) / Part P</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="heat-4" data-category="Heating & Hot Water" data-item="Secondary Heating System & Safety"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-heat-4" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Hot Water Cylinder Location, Sizing, Insulation & Heating Method
-                            <span class="b-reg-ref">Ref: Part G (Sanitation, hot water safety) / Part L</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="heat-5" data-category="Heating & Hot Water" data-item="Cylinder Sizing & Insulation"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-heat-5" placeholder="Enter findings..."></textarea></td>
+                        <th>Calculated Standing Charge (Per Month)</th>
+                        <td class="calculated-value" id="calc-gas-sc">£0.00 / mo</td>
+                        <th>Total Estimated Monthly Cost</th>
+                        <td class="calculated-value" id="calc-gas-total">£0.00 / mo</td>
                     </tr>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- ELECTRICAL INFRASTRUCTURE & UTILITIES ACCORDION -->
-    <div class="accordion-section">
-        <div class="accordion-header">
-            <h3>Electrical Infrastructure & Utilities</h3>
-            <span class="accordion-icon">+</span>
-        </div>
-        <div class="accordion-content">
-            <div class="table-wrapper">
-                <table>
-                    <tr>
-                        <th>Item Description</th>
-                        <th class="center" style="width: 50px;">Sat.</th>
-                        <th class="center" style="width: 60px;">Action Req.</th>
-                        <th class="center" style="width: 50px;">N/A</th>
-                        <th>Inspection Finding / Reference</th>
-                    </tr>
-                    <tr>
-                        <td>Energy Efficient Lighting
-                            <span class="b-reg-ref">Ref: Part L (Conservation of Fuel and Power)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="elec-1" data-category="Electrical & Utilities" data-item="Energy Efficient Lighting"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-elec-1" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                    <tr>
-                        <td>Electric Meter Type (Single / Dual Rate / Smart Meter)
-                            <span class="b-reg-ref">Ref: Part L / Part P (Electrical Safety)</span>
-                        </td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td class="center"><input type="checkbox" class="action-req-cb" data-id="elec-2" data-category="Electrical & Utilities" data-item="Electric Meter Type"></td>
-                        <td class="center"><input type="checkbox"></td>
-                        <td><textarea class="finding-input" id="finding-elec-2" placeholder="Enter findings..."></textarea></td>
-                    </tr>
-                </table>
-            </div>
+    <!-- HOT WATER -->
+    <div id="sec-hot-water" class="module-hidden">
+        <h2>HOT WATER CYLINDER</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Heated By</th>
+                    <td colspan="3">
+                        <select id="hw-heated-by" class="trigger-calc">
+                            <option value="main">Main Heating System (Boiler/ASHP)</option>
+                            <option value="immersion">Immersion Heater Only</option>
+                            <option value="both">Both</option>
+                            <option value="instantaneous">Instantaneous unit</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="hw-conditional-row">
+                    <th>Immersion Setup</th>
+                    <td colspan="3">
+                        <select>
+                            <option>Single Immersion</option>
+                            <option>Dual Immersion</option>
+                            <option>N/A</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="hw-conditional-row">
+                    <th>Control Method</th>
+                    <td>
+                        <select id="hw-control" class="trigger-calc">
+                            <option value="timer">Off-Peak Timer</option>
+                            <option value="programmer">Programmer</option>
+                            <option value="app">App Controlled</option>
+                            <option value="manual">Manual Switch</option>
+                            <option value="continuous">On Continuous (High cost risk)</option>
+                        </select>
+                    </td>
+                    <th>Timer Set Periods</th>
+                    <td>
+                        <textarea placeholder="Record timer periods or heating schedule details..." style="min-height: 60px;"></textarea>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
+
+    <!-- SOLAR PV -->
+    <div id="sec-solar" class="module-hidden">
+        <h2>SOLAR PANELS</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Receiving Funds for Solar Export?</th>
+                    <td>
+                        <select id="solar-export-status" class="trigger-calc">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </td>
+                    <th>Export Tariff Rate (p/kWh)</th>
+                    <td>
+                        <input type="number" step="0.01" id="solar-rate" class="trigger-calc" placeholder="Enter Rate">
+                    </td>
+                </tr>
+                <tr id="row-solar-account" class="module-hidden">
+                    <th>Energy Company Online Account</th>
+                    <td colspan="3">
+                        <select id="solar-account-status" class="trigger-calc">
+                            <option value="active">Yes - Active</option>
+                            <option value="none">No - Online Account set up required</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="row-solar-payment">
+                    <th>Payment Destination</th>
+                    <td colspan="3">
+                        <select>
+                            <option>Credit applied to Energy Bill</option>
+                            <option>Direct to Bank Account</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <table id="solar-docs-wrapper" class="module-hidden">
+                <tr>
+                    <th colspan="2" style="background: #e6f0fa;">Missing Export Documents Checklist (Unticked = Missing)</th>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="checklist-group">
+                            <label><input type="checkbox" class="doc-chk trigger-calc" data-doc="MCS Certificate"> MCS Certificate</label>
+                            <label><input type="checkbox" class="doc-chk trigger-calc" data-doc="DNO Confirmation"> DNO Confirmation</label>
+                            <label><input type="checkbox" class="doc-chk trigger-calc" data-doc="Proof of Ownership"> Proof of Ownership</label>
+                            <label><input type="checkbox" class="doc-chk trigger-calc" data-doc="Photo of Export on Electric Meter"> Photo of Export on Electric Meter</label>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- BATTERY STORAGE -->
+    <div id="sec-battery" class="module-hidden">
+        <h2>BATTERY STORAGE</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Battery Capacity (kWh)</th>
+                    <td><input type="number" step="0.1" placeholder="e.g. 5.8 kWh"></td>
+                    <th>Control Method / Integration</th>
+                    <td>
+                        <select>
+                            <option>Inverter Integrated Display / Manual Controls</option>
+                            <option>Dedicated Resident App (Self-Managed)</option>
+                            <option>Energy Company Managed</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>System Operating Mode</th>
+                    <td colspan="3">
+                        <label><input type="checkbox"> Time-of-Use Optimized</label> &nbsp;|&nbsp;
+                        <label><input type="checkbox"> Self-Consumption Priority</label> &nbsp;|&nbsp;
+                        <label><input type="checkbox"> Back-up Power Enabled</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ELECTRIC VEHICLE -->
+    <div id="sec-ev" class="module-hidden">
+        <h2>ELECTRIC VEHICLE (EV) CHARGING</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>EV Charger Present?</th>
+                    <td colspan="3">
+                        <select id="ev-charger-present" class="trigger-calc">
+                            <option value="dedicated">Yes - Dedicated Home Charger</option>
+                            <option value="granny">Yes - 3-pin Plug (Granny Charger - Review)</option>
+                            <option value="none">No Charger Present</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="ev-conditional-row">
+                    <th>Charger Power / Type</th>
+                    <td>
+                        <select>
+                            <option>7kW Smart Charger (Single Phase)</option>
+                            <option>22kW Fast Charger (Three Phase)</option>
+                            <option>Standard 3-pin Socket</option>
+                        </select>
+                    </td>
+                    <th>Cable Setup</th>
+                    <td>
+                        <select>
+                            <option>Tethered Unit</option>
+                            <option>Untethered Unit</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr class="ev-conditional-row">
+                    <th>Smart Tariff Compatibility</th>
+                    <td colspan="3">
+                        <select>
+                            <option>Compatible with EV Tariffs (e.g., Intelligent Octopus)</option>
+                            <option>Standard Tariff Charging</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- DECLARATION -->
+    <h2>DECLARATION</h2>
+    <div class="declaration-text">
+        <ol>
+            <li>The information and advice provided are intended for general guidance purposes only. It is not, and should not be considered, a substitute for professional financial or legal advice.</li>
+            <li>We do not guarantee the accuracy, completeness, or timeliness of the information provided. The energy market in the UK is highly volatile.</li>
+            <li>It is your sole responsibility to conduct your own due diligence and verify all information directly with energy suppliers or regulatory bodies.</li>
+            <li>Rand Associates and its representatives shall not be liable for any loss, damage, or inconvenience arising from the use of, or reliance on, the advice provided.</li>
+            <li>Any personal information you provide will be handled in accordance with our privacy policy, which is available upon request.</li>
+        </ol>
+        <p><strong>By signing this form, I confirm that I have read, understood, and accept the terms of this declaration.</strong></p>
+    </div>
+    
+    <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>Print Name:</th><td><input type="text"></td>
+                <th>Date:</th><td><input type="date"></td>
+            </tr>
+            <tr>
+                <th>Signature:</th>
+                <td colspan="3"><textarea style="height: 60px;" placeholder="Sign here (or digital capture)"></textarea></td>
+            </tr>
+        </table>
+    </div>
+
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-
-    // Default inspection date to today
-    const dateInput = document.getElementById('inspection-date');
-    if (dateInput && !dateInput.value) {
-        const today = new Date().toISOString().split('T')[0];
-        dateInput.value = today;
-    }
-
-    // --- Auto-Resize Textarea Logic ---
-    function autoResizeTextarea(el) {
-        if (!el) return;
-        el.style.height = 'auto';
-        el.style.height = (el.scrollHeight + 4) + 'px';
-    }
-    
-    document.addEventListener('input', function(e) {
-        if (e.target.tagName && e.target.tagName.toLowerCase() === 'textarea') {
-            autoResizeTextarea(e.target);
-            if (e.target.closest('.custom-finding-row') && e.target.closest('td') && e.target.closest('td').cellIndex === 1) {
-                updateAllPhotoDropdowns();
-            }
-        }
-    });
-
-    // Prepare all textareas and sections before print dialog triggers
-    function prepareForPrint() {
-        // Synchronize HTML checked attributes so PDF generators & print drivers preserve checkmarks
-        document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-            if (cb.checked) {
-                cb.setAttribute('checked', 'checked');
-            } else {
-                cb.removeAttribute('checked');
-            }
-        });
-
-        document.querySelectorAll('textarea').forEach(ta => {
-            autoResizeTextarea(ta);
-        });
-        updateAccordionVisibility();
-    }
-
-    window.addEventListener('beforeprint', prepareForPrint);
-
-    const btnTriggerPrint = document.getElementById('btn-trigger-print');
-    if (btnTriggerPrint) {
-        btnTriggerPrint.addEventListener('click', function() {
-            prepareForPrint();
-            setTimeout(() => {
-                window.print();
-            }, 100);
-        });
-    }
-
-    // --- Accordion Toggle & Expand All Logic ---
-    let allExpanded = false;
-    const btnToggleAccordions = document.getElementById('btn-toggle-accordions');
-    
-    function setAccordionState(sec, expand) {
-        const content = sec.querySelector('.accordion-content');
-        const icon = sec.querySelector('.accordion-icon');
-        if (expand) {
-            content.style.display = "block";
-            if (icon) icon.textContent = "-";
-        } else {
-            content.style.display = "none";
-            if (icon) icon.textContent = "+";
-        }
-    }
-
-    if (btnToggleAccordions) {
-        btnToggleAccordions.addEventListener('click', function() {
-            allExpanded = !allExpanded;
-            const sections = document.querySelectorAll('.accordion-section');
-            sections.forEach(sec => setAccordionState(sec, allExpanded));
-            this.textContent = allExpanded ? "↔️ Collapse All" : "↔️ Expand All";
-        });
-    }
-
-    const accordions = document.querySelectorAll('.accordion-header');
-    accordions.forEach(acc => {
-        acc.addEventListener('click', function() {
-            const sec = this.closest('.accordion-section');
-            const content = this.nextElementSibling;
-            const isCurrentlyOpen = content.style.display === "block";
-            setAccordionState(sec, !isCurrentlyOpen);
-        });
-    });
-
-    // Dynamic Visibility Logic for Print
-    function updateAccordionVisibility() {
-        const sections = document.querySelectorAll('.accordion-section');
-        sections.forEach(sec => {
-            const checkboxes = sec.querySelectorAll('input[type="checkbox"]');
-            const findingInputs = sec.querySelectorAll('.finding-input');
-            let hasContent = false;
-
-            checkboxes.forEach(cb => {
-                if (cb.checked) hasContent = true;
-            });
-
-            findingInputs.forEach(ta => {
-                if (ta.value.trim() !== '') hasContent = true;
-            });
-
-            const content = sec.querySelector('.accordion-content');
-            const icon = sec.querySelector('.accordion-icon');
-
-            if (hasContent) {
-                sec.classList.add('visible-section');
-                sec.classList.remove('hidden-section');
-                content.style.display = "block";
-                if (icon) icon.textContent = "-";
-            } else {
-                sec.classList.remove('visible-section');
-                sec.classList.add('hidden-section');
-                if (!allExpanded) {
-                    content.style.display = "none";
-                    if (icon) icon.textContent = "+";
-                }
-            }
-        });
-
-        const notesTa = document.getElementById('additional-notes-textarea');
-        const notesContainer = document.getElementById('additional-notes-container');
-        if (notesTa && notesContainer) {
-            if (notesTa.value.trim() === '') {
-                notesTa.classList.add('empty-notes-area');
-                notesContainer.classList.add('empty-notes-container');
-            } else {
-                notesTa.classList.remove('empty-notes-area');
-                notesContainer.classList.remove('empty-notes-container');
-            }
-        }
-    }
-
-    const btnAddFan = document.getElementById('btn-add-fan');
-    const fansContainer = document.getElementById('fans-container');
-    const registerBody = document.getElementById('remedial-register-body');
-    const propAddressInput = document.getElementById('prop-address');
-    const headerAddressDiv = document.getElementById('header-address');
-    const btnAddCustomFinding = document.getElementById('btn-add-custom-finding');
-    
-    let fanCounter = 1;
-    let customFindingCount = 0;
-
-    if (propAddressInput && headerAddressDiv) {
-        propAddressInput.addEventListener('input', function() {
-            headerAddressDiv.textContent = this.value;
-        });
-    }
-
-    // Helper to update Fan category naming based on selected location
-    function updateFanCategoryName(fanNum) {
-        const fanSection = document.getElementById(`fan-section-${fanNum}`);
-        if (!fanSection) return;
+    document.addEventListener('DOMContentLoaded', function () {
         
-        const locSelect = fanSection.querySelector('.fan-location-select');
-        const locationVal = locSelect ? locSelect.value : "";
-        const categoryLabel = locationVal ? `Mechanical Ventilation (Fan ${fanNum} - ${locationVal})` : `Mechanical Ventilation (Fan ${fanNum})`;
-
-        const checkboxes = fanSection.querySelectorAll('.action-req-cb');
-        checkboxes.forEach(cb => {
-            cb.dataset.category = categoryLabel;
-            
-            if (cb.checked) {
-                const rowId = 'register-row-' + cb.dataset.id;
-                const regRow = document.getElementById(rowId);
-                if (regRow) {
-                    regRow.cells[1].textContent = `${cb.dataset.category} - ${cb.dataset.item}`;
-                }
-            }
-        });
-        updateAllPhotoDropdowns();
-    }
-
-    // Change and input listener for live DOM updates
-    document.addEventListener('change', function(e) {
-        if (e.target && e.target.type === 'checkbox') {
-            if (e.target.checked) {
-                e.target.setAttribute('checked', 'checked');
-            } else {
-                e.target.removeAttribute('checked');
-            }
-        }
-        if (e.target && e.target.classList.contains('fan-location-select')) {
-            const fanNum = e.target.dataset.fanNum;
-            if (fanNum) updateFanCategoryName(fanNum);
-        }
-        updateAccordionVisibility();
-    });
-
-    if (btnAddFan && fansContainer) {
-        btnAddFan.addEventListener('click', function() {
-            fanCounter++;
-            const fanNum = fanCounter;
-            const fanSection = document.createElement('div');
-            fanSection.className = 'fan-section';
-            fanSection.id = `fan-section-${fanNum}`;
-            fanSection.dataset.fanNum = fanNum;
-
-            fanSection.innerHTML = `
-                <div class="fan-header-container">
-                    <h4>Fan ${fanNum} 
-                        <select class="location-select fan-location-select" data-fan-num="${fanNum}">
-                            <option value="">Select Location...</option>
-                            <option value="Kitchen">Kitchen</option>
-                            <option value="Bathroom">Bathroom</option>
-                            <option value="WC">WC</option>
-                            <option value="En-suite">En-suite</option>
-                            <option value="Utility">Utility</option>
-                        </select>
-                    </h4>
-                    <button type="button" class="btn-remove-fan no-print">Delete Fan ${fanNum}</button>
-                </div>
-                <div class="table-wrapper">
-                    <table>
-                        <tr>
-                            <th>Item Description</th>
-                            <th class="center" style="width: 50px;">Sat.</th>
-                            <th class="center" style="width: 60px;">Action Req.</th>
-                            <th class="center" style="width: 50px;">N/A</th>
-                            <th>Inspection Finding / Reference</th>
-                        </tr>
-                        <tr>
-                            <td>Unit Type (Intermittent / dMEV / MEV / PIV) & Model/ Manufacturer
-                                <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                            </td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-1-fan${fanNum}" data-category="Mechanical Ventilation (Fan ${fanNum})" data-item="Unit Type & Manufacturer"></td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td><textarea class="finding-input" id="finding-vent-1-fan${fanNum}" placeholder="Enter findings..."></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>Wall or Ceiling Mounting
-                                <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                            </td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-2-fan${fanNum}" data-category="Mechanical Ventilation (Fan ${fanNum})" data-item="Mounting Security"></td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td><textarea class="finding-input" id="finding-vent-2-fan${fanNum}" placeholder="Enter findings..."></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>Ducting Material (Rigid/Flexi) & Insulation in Cold Voids
-                                <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                            </td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-3-fan${fanNum}" data-category="Mechanical Ventilation (Fan ${fanNum})" data-item="Ducting Material & Insulation"></td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td><textarea class="finding-input" id="finding-vent-3-fan${fanNum}" placeholder="Enter findings..."></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>Local Fused Isolation Switch
-                                <span class="b-reg-ref">Ref: Approved Document P (Electrical Safety)</span>
-                            </td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-4-fan${fanNum}" data-category="Mechanical Ventilation (Fan ${fanNum})" data-item="Isolation Switch Installed"></td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td><textarea class="finding-input" id="finding-vent-4-fan${fanNum}" placeholder="Enter findings..."></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>External Ducting Grille
-                                <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                            </td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-5-fan${fanNum}" data-category="Mechanical Ventilation (Fan ${fanNum})" data-item="External Ducting Grille"></td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td><textarea class="finding-input" id="finding-vent-5-fan${fanNum}" placeholder="Enter findings..."></textarea></td>
-                        </tr>
-                        <tr>
-                            <td>Measured Trickle & Boost Airflow Rates
-                                <span class="b-reg-ref">Ref: Approved Document F (Ventilation)</span>
-                            </td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td class="center"><input type="checkbox" class="action-req-cb" data-id="vent-6-fan${fanNum}" data-category="Mechanical Ventilation (Fan ${fanNum})" data-item="Trickle & Boost Airflow Rates"></td>
-                            <td class="center"><input type="checkbox"></td>
-                            <td><textarea class="finding-input" id="finding-vent-6-fan${fanNum}" placeholder="Enter findings..."></textarea></td>
-                        </tr>
-                    </table>
-                </div>
-            `;
-
-            fanSection.querySelector('.btn-remove-fan').addEventListener('click', function() {
-                const cbs = fanSection.querySelectorAll('.action-req-cb');
-                cbs.forEach(cb => {
-                    const rowToRemove = document.getElementById('register-row-' + cb.dataset.id);
-                    if (rowToRemove) rowToRemove.remove();
-                });
-                fanSection.remove();
-                updateActionNumbers();
-                updateAccordionVisibility();
-            });
-
-            fansContainer.appendChild(fanSection);
-            fanSection.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
-            updateAccordionVisibility();
-        });
-    }
-
-    if (btnAddCustomFinding) {
-        btnAddCustomFinding.addEventListener('click', function() {
-            customFindingCount++;
-            const rowId = 'custom-row-' + customFindingCount;
-            
-            const tr = document.createElement('tr');
-            tr.id = rowId;
-            tr.className = 'custom-finding-row';
-            tr.innerHTML = `
-                <td class="center"><strong></strong></td>
-                <td><textarea class="custom-row-input" placeholder="Type component name..."></textarea></td>
-                <td><textarea class="custom-row-input" placeholder="Type finding details..."></textarea></td>
-                <td class="center no-print-col"><button type="button" class="btn-remove-row" title="Delete custom row">Delete</button></td>
-            `;
-            
-            tr.querySelector('.btn-remove-row').addEventListener('click', function() {
-                tr.remove();
-                updateActionNumbers();
-            });
-
-            registerBody.appendChild(tr);
-            updateActionNumbers();
-            tr.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
-        });
-    }
-
-    // Dynamic Photo Dropdown Sync
-    function getRegisterItems() {
-        const items = [];
-        const rows = registerBody.querySelectorAll('tr');
-        rows.forEach((row, index) => {
-            const num = index + 1;
-            let componentText = "";
-            const componentTextArea = row.cells[1].querySelector('textarea');
-            if (componentTextArea) {
-                componentText = componentTextArea.value || "Custom Item";
-            } else {
-                componentText = row.cells[1].textContent;
-            }
-
-            items.push({
-                id: row.id,
-                label: `${num}. ${componentText}`
-            });
-        });
-        return items;
-    }
-
-    function updateAllPhotoDropdowns() {
-        const items = getRegisterItems();
-        const selects = document.querySelectorAll('.photo-ref-select');
+        // --- 1. DOM Element Selections ---
+        const addressInput = document.getElementById('prop-address');
+        const headerAddress = document.getElementById('header-address');
+        const registerBody = document.getElementById('remedial-register-body');
+        const scopeToggles = document.querySelectorAll('.scope-toggle');
+        const eHeatRadios = document.querySelectorAll('input[name="e_heat"]');
+        const subStorage = document.getElementById('sub-storage');
+        const subAshp = document.getElementById('sub-ashp');
+        const fuelSelect = document.getElementById('heating-fuel');
+        const rowGasOnly = document.querySelectorAll('.row-gas-only');
+        const rowOil = document.getElementById('row-oil-tank');
+        const gasCalcWrapper = document.getElementById('gas-calc-wrapper');
+        const hwHeatedBy = document.getElementById('hw-heated-by');
+        const hwConditionalRows = document.querySelectorAll('.hw-conditional-row');
+        const evChargerSelect = document.getElementById('ev-charger-present');
+        const evConditionalRows = document.querySelectorAll('.ev-conditional-row');
+        const structureSelect = document.getElementById('tariff-structure');
+        const dateSelect = document.getElementById('tariff-date-select');
+        const gasStructureSelect = document.getElementById('gas-tariff-structure');
+        const gasDateSelect = document.getElementById('gas-tariff-date-select');
+        const rateTypeSelect = document.getElementById('rate-type-select');
+        const nightRateInput = document.getElementById('rate-night');
+        const rowDualSplit = document.getElementById('row-dual-split');
+        const solarExportStatus = document.getElementById('solar-export-status');
+        const rowSolarAccount = document.getElementById('row-solar-account');
+        const rowSolarPayment = document.getElementById('row-solar-payment');
+        const solarAccountStatus = document.getElementById('solar-account-status');
+        const solarDocsWrapper = document.getElementById('solar-docs-wrapper');
         
-        selects.forEach(select => {
-            const currentValue = select.value;
-            select.innerHTML = '<option value="">General</option>';
-            
-            items.forEach(item => {
-                const opt = document.createElement('option');
-                opt.value = item.id;
-                opt.textContent = item.label.length > 42 ? item.label.substring(0, 39) + '...' : item.label;
-                select.appendChild(opt);
-            });
-            
-            if (currentValue && select.querySelector(`option[value="${currentValue}"]`)) {
-                select.value = currentValue;
-            }
-        });
-    }
+        // New elements from EnergyAdvice 10 integration
+        const elecExitFeeRow = document.getElementById('row-elec-exit-fee');
+        const rowGasExitFee = document.getElementById('row-gas-exit-fee');
+        const rowGasTariffStructure = document.getElementById('row-gas-tariff-structure');
 
-    // Action Required Checkbox Handler
-    document.addEventListener('change', function(e) {
-        if (e.target && e.target.classList.contains('action-req-cb')) {
-            const cb = e.target;
-            const rowId = 'register-row-' + cb.dataset.id;
-            
-            if (cb.checked) {
-                const findingInput = document.getElementById('finding-' + cb.dataset.id);
-                const findingText = findingInput ? findingInput.value : "";
-                
+        // --- 2. Master Calculation & Automation Engine ---
+        function runMasterCalculation() {
+            // Save manual rows added by user
+            const manualRows = Array.from(registerBody.querySelectorAll('tr.manual-row'));
+            registerBody.innerHTML = '';
+
+            function addActionRow(category, item, remedialAction) {
                 const tr = document.createElement('tr');
-                tr.id = rowId;
                 tr.className = 'auto-populated';
                 tr.innerHTML = `
-                    <td class="center"><strong></strong></td>
-                    <td>${cb.dataset.category} - ${cb.dataset.item}</td>
-                    <td><span class="register-finding-text">${findingText || "No notes entered"}</span></td>
-                    <td class="center no-print-col"><span style="color:#aaa; font-size: 0.8em;">Auto</span></td>
+                    <td><strong>${category}</strong><br>${item}</td>
+                    <td><input type="text" value="${remedialAction}"></td>
                 `;
-                
                 registerBody.appendChild(tr);
-            } else {
-                const rowToRemove = document.getElementById('register-row-' + cb.dataset.id);
-                if (rowToRemove) {
-                    rowToRemove.remove();
+            }
+
+            // Process Manual Action Logic Checks
+            document.querySelectorAll('.action-req-cb').forEach(cb => {
+                if (cb.checked && !cb.closest('.module-hidden')) {
+                    addActionRow(cb.getAttribute('data-category'), cb.getAttribute('data-item'), "Action required");
                 }
-            }
-            updateActionNumbers();
-        }
-    });
-
-    // Live sync finding inputs into register text
-    document.addEventListener('input', function(e) {
-        if (e.target && e.target.classList.contains('finding-input') && e.target.id) {
-            const idPart = e.target.id.replace('finding-', '');
-            const row = document.getElementById('register-row-' + idPart);
-            if (row) {
-                const span = row.querySelector('.register-finding-text');
-                if (span) {
-                    span.textContent = e.target.value || "No notes entered";
-                }
-            }
-        }
-    });
-
-    function updateActionNumbers() {
-        if (!registerBody) return;
-        const rows = registerBody.querySelectorAll('tr');
-        rows.forEach((row, index) => {
-            const numCell = row.querySelector('td:first-child strong');
-            if (numCell) {
-                numCell.textContent = index + 1;
-            }
-        });
-        updateAllPhotoDropdowns();
-    }
-
-    const btnAddPhotos = document.getElementById('btn-add-photos');
-    const photoFileInput = document.getElementById('photo-file-input');
-    const photoGrid = document.getElementById('photo-grid');
-
-    if (btnAddPhotos && photoFileInput) {
-        btnAddPhotos.addEventListener('click', function() {
-            photoFileInput.click();
-        });
-
-        photoFileInput.addEventListener('change', function(e) {
-            const files = e.target.files;
-            if (!files) return;
-
-            Array.from(files).forEach(file => {
-                if (!file.type.startsWith('image/')) return;
-
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    const card = document.createElement('div');
-                    card.className = 'photo-card';
-                    card.innerHTML = `
-                        <img src="${evt.target.result}" alt="Inspection Photograph">
-                        <textarea placeholder="Photo description/notes..."></textarea>
-                        <div class="photo-card-controls">
-                            <label>Ref: 
-                                <select class="photo-ref-select">
-                                    <option value="">General</option>
-                                </select>
-                            </label>
-                            <button type="button" class="btn-remove-photo">Delete</button>
-                        </div>
-                    `;
-                    
-                    card.querySelector('.btn-remove-photo').addEventListener('click', function() {
-                        card.remove();
-                    });
-
-                    photoGrid.appendChild(card);
-                    
-                    const newTextarea = card.querySelector('textarea');
-                    autoResizeTextarea(newTextarea);
-                    updateAllPhotoDropdowns();
-                };
-                reader.readAsDataURL(file);
             });
-            photoFileInput.value = '';
-        });
-    }
-});
-</script>
 
+            // Occupancy Metrics
+            const adults = parseInt(document.getElementById('occ-adults').value) || 0;
+            const children = parseInt(document.getElementById('occ-children').value) || 0;
+            const totalOccupants = adults + children;
+
+            // Priority Services Register Rules
+            if (document.getElementById('psr-child').checked) addActionRow("Vulnerability (PSR)", "Child < 5 in property", "Register on Priority Services Register");
+            if (document.getElementById('psr-adult').checked) addActionRow("Vulnerability (PSR)", "Adult > 65 in property", "Register on Priority Services Register");
+
+            // Payment & Debt Rules
+            if (document.getElementById('payment-method').value === 'not_paying') {
+                addActionRow("Financial Hardship", "Not contributing to energy bills", "Urgent referral for debt support / LEAP / Fuel vouchers");
+            }
+            const debtValue = parseInt(document.getElementById('debt-status').value);
+            if (debtValue >= 500) {
+                addActionRow("Financial / Switching", "Debt over £150", "Supplier switch blocked due to debt protocol. Resolve arrears first.");
+            }
+
+            // Electricity Section Automations
+            const isElecScope = document.querySelector('input[data-target="sec-elec"]').checked;
+            const usageFormat = document.getElementById('usage-format').value;
+            let usageInput = parseFloat(document.getElementById('usage-input').value) || 0;
+            const dayRate = parseFloat(document.getElementById('rate-day').value) || 0;
+            const nightRate = parseFloat(document.getElementById('rate-night').value) || 0;
+            const scRate = parseFloat(document.getElementById('rate-sc').value) || 0;
+            const isDual = rateTypeSelect.value === 'dual';
+
+            let annualUsageKwh = usageFormat === 'annual' ? usageInput : (usageInput * 12);
+            let monthlyUsageKwh = usageFormat === 'monthly' ? usageInput : (usageInput / 12);
+
+            // Electricity Cost calculation
+            let monthlyEnergyCost = 0;
+            if (isDual) {
+                const dayUsageInput = parseFloat(document.getElementById('usage-day').value) || 0;
+                const nightUsageInput = parseFloat(document.getElementById('usage-night').value) || 0;
+                let mDayKwh = usageFormat === 'monthly' ? dayUsageInput : (dayUsageInput / 12);
+                let mNightKwh = usageFormat === 'monthly' ? nightUsageInput : (nightUsageInput / 12);
+                monthlyEnergyCost = ((mDayKwh * dayRate) + (mNightKwh * nightRate)) / 100;
+                
+                const totalSplitKwh = dayUsageInput + nightUsageInput;
+                const splitOutput = document.getElementById('night-split-output');
+                if (totalSplitKwh > 0) {
+                    const nightPct = (nightUsageInput / totalSplitKwh) * 100;
+                    splitOutput.value = nightPct.toFixed(1) + "%";
+                    
+                    if (nightPct < 40) {
+                        splitOutput.classList.add('alert-red');
+                        if (isElecScope) {
+                            addActionRow("Economy 7", `Off-peak usage is only ${nightPct.toFixed(1)}%`, "Single rate tariff may be cheaper. Model switch.");
+                        }
+                    } else {
+                        splitOutput.classList.remove('alert-red');
+                    }
+                }
+            } else {
+                monthlyEnergyCost = (monthlyUsageKwh * dayRate) / 100;
+            }
+
+            const monthlySCCost = (scRate * 365 / 12) / 100;
+            const totalMonthlyCost = monthlyEnergyCost + monthlySCCost;
+
+            document.getElementById('calc-energy').value = "£" + monthlyEnergyCost.toFixed(2);
+            document.getElementById('calc-sc').value = "£" + monthlySCCost.toFixed(2);
+            document.getElementById('calc-total').value = "£" + totalMonthlyCost.toFixed(2);
+
+            // Benchmark Analysis - Electricity
+            if (isElecScope && annualUsageKwh > 0) {
+                const isElecHeat = document.querySelector('input[data-target="sec-elec-heat"]').checked;
+                let benchmark = 2700; 
+                if (isElecHeat) {
+                    if (totalOccupants <= 1) benchmark = 2500;
+                    else if (totalOccupants <= 3) benchmark = 4200;
+                    else benchmark = 6500;
+                } else {
+                    if (totalOccupants <= 1) benchmark = 1800;
+                    else if (totalOccupants <= 3) benchmark = 2700;
+                    else benchmark = 4100;
+                }
+
+                if (annualUsageKwh > (benchmark * 1.05)) {
+                    addActionRow("High Electricity Consumption", `Usage (${annualUsageKwh.toFixed(0)} kWh/yr) exceeds national benchmark (${benchmark} kWh)`, "Conduct behavioural check and appliance matrix.");
+                    document.getElementById('calc-total').classList.add('alert-red');
+                } else {
+                    document.getElementById('calc-total').classList.remove('alert-red');
+                }
+            }
+
+            // Appliance Usage Section Automations
+            const isAppScope = document.querySelector('input[data-target="sec-app"]').checked;
+            const unitRateCalc = (isDual && dayRate > 0) ? dayRate : (dayRate > 0 ? dayRate : 24.5);
+            let totalAppKwh = 0;
+            let totalAppCost = 0;
+            const waterNote = " It may be worth speaking to the water company.";
+
+            // Washing Machine
+            const washFreq = parseInt(document.getElementById('app-wash').value) || 0;
+            const washKwh = washFreq * 0.7;
+            const washCost = (washKwh * unitRateCalc) / 100;
+            document.getElementById('app-wash-kwh').value = washKwh.toFixed(1);
+            document.getElementById('app-wash-cost').value = "£" + washCost.toFixed(2);
+            totalAppKwh += washKwh; totalAppCost += washCost;
+            if (isAppScope && washFreq > 15 && totalOccupants <= 2) {
+                addActionRow("Appliance Overuse", "Washing Machine used >3 times/week for small household", "Advise full loads / 30°C cycles." + waterNote);
+            }
+
+            // Tumble Dryer
+            const dryFreq = parseInt(document.getElementById('app-dryer').value) || 0;
+            const dryKwh = dryFreq * 2.5;
+            const dryCost = (dryKwh * unitRateCalc) / 100;
+            document.getElementById('app-dryer-kwh').value = dryKwh.toFixed(1);
+            document.getElementById('app-dryer-cost').value = "£" + dryCost.toFixed(2);
+            totalAppKwh += dryKwh; totalAppCost += dryCost;
+            if (isAppScope && dryFreq > 8) {
+                addActionRow("Appliance Overuse", "Tumble Dryer frequent usage", "Discuss passive drying alternatives." + waterNote);
+            }
+
+            // Electric Shower
+            const showerMins = parseInt(document.getElementById('app-shower').value) || 0;
+            const showerKwh = showerMins * 0.141;
+            const showerCost = (showerKwh * unitRateCalc) / 100;
+            document.getElementById('app-shower-kwh').value = showerKwh.toFixed(1);
+            document.getElementById('app-shower-cost').value = "£" + showerCost.toFixed(2);
+            totalAppKwh += showerKwh; totalAppCost += showerCost;
+            if (isAppScope && showerMins > 300 && totalOccupants <= 2) {
+                addActionRow("Appliance Overuse", "Electric Shower > 10 mins per person/day", "Provide 4-minute shower timers." + waterNote);
+            }
+
+            // Fridge/Freezer
+            const fridgeVal = parseInt(document.getElementById('app-fridge').value) || 0;
+            const fridgeKwh = fridgeVal;
+            const fridgeCost = (fridgeKwh * unitRateCalc) / 100;
+            document.getElementById('app-fridge-kwh').value = fridgeKwh.toFixed(1);
+            document.getElementById('app-fridge-cost').value = "£" + fridgeCost.toFixed(2);
+            totalAppKwh += fridgeKwh; totalAppCost += fridgeCost;
+            if (isAppScope && fridgeKwh > 50) {
+                addActionRow("Appliance Efficiency", "Fridge/Freezer old or faulty", "Check seal / Defrost / Ensure ventilation.");
+            }
+
+            // Plug-in Heaters
+            const hQty = parseInt(document.getElementById('app-heater-qty').value) || 0;
+            const hHrs = parseInt(document.getElementById('app-heater-hrs').value) || 0;
+            const hKwh = hQty * hHrs * 2 * 28;
+            const hCost = (hKwh * unitRateCalc) / 100;
+            document.getElementById('app-heater-kwh').value = hKwh.toFixed(1);
+            document.getElementById('app-heater-cost').value = "£" + hCost.toFixed(2);
+            totalAppKwh += hKwh; totalAppCost += hCost;
+            if (isAppScope && hKwh > 100) {
+                addActionRow("Heating Behavior", "High reliance on plug-in heaters", "Extremely expensive point-source heating. Diagnose primary heating failure.");
+            }
+
+            // Oven
+            const ovenHrs = parseInt(document.getElementById('app-oven').value) || 0;
+            const ovenKwh = ovenHrs * 3;
+            const ovenCost = (ovenHrs * unitRateCalc) / 100;
+            document.getElementById('app-oven-kwh').value = ovenKwh.toFixed(1);
+            document.getElementById('app-oven-cost').value = "£" + ovenCost.toFixed(2);
+            totalAppKwh += ovenKwh; totalAppCost += ovenCost;
+            if (isAppScope && ovenHrs > 84) {
+                addActionRow("Appliance Overuse", "High Electric Oven/Hob usage", "Advise use of microwave, slow cooker, or air fryer for efficiency.");
+            }
+
+            document.getElementById('app-total-kwh').value = totalAppKwh.toFixed(1);
+            document.getElementById('app-total-cost').value = "£" + totalAppCost.toFixed(2);
+
+            // Storage Heating Automations
+            const isElecHeatScope = document.querySelector('input[data-target="sec-elec-heat"]').checked;
+            if (isElecHeatScope && document.querySelector('input[name="e_heat"]:checked')?.value === 'storage') {
+                const age = document.getElementById('storage-age').value;
+                const qty = parseInt(document.getElementById('storage-qty').value) || 1;
+                
+                let kWhPerHeater = 15;
+                if (age === 'modern') kWhPerHeater = 10;
+                if (age === 'outdated') {
+                    kWhPerHeater = 22;
+                    addActionRow("Heating System", "Out of date storage heater", "Upgrade required via social housing provider schemes");
+                }
+
+                const nightRateVal = nightRate > 0 ? nightRate : (dayRate > 0 ? dayRate : 24.5);
+                const estOvernightCost = (qty * kWhPerHeater * nightRateVal) / 100;
+                document.getElementById('calc-overnight-charge').value = "£" + estOvernightCost.toFixed(2);
+            }
+
+            // Gas/Oil Automations & Calculations
+            const isGasScope = document.querySelector('input[data-target="sec-gas"]').checked;
+            if (isGasScope) {
+                if (fuelSelect.value === 'gas') {
+                    const elecSupp = document.getElementById('elec-supplier').value.trim().toLowerCase();
+                    const gasSupp = document.getElementById('gas-supplier').value.trim().toLowerCase();
+                    if (gasSupp !== '' && elecSupp !== '' && gasSupp !== elecSupp) {
+                        addActionRow("Energy Supply", "Gas and electricity suppliers do not match", "Check dual fuel bundle options to reduce standing charges.");
+                    }
+
+                    // Gas Cost Calculation
+                    const gasUsageFormat = document.getElementById('gas-usage-format').value;
+                    const gasUsageInput = parseFloat(document.getElementById('gas-usage-input').value) || 0;
+                    const gasUnitRate = parseFloat(document.getElementById('gas-rate-unit').value) || 0;
+                    const gasScRate = parseFloat(document.getElementById('gas-rate-sc').value) || 0;
+
+                    let annualGasKwh = gasUsageFormat === 'annual' ? gasUsageInput : (gasUsageInput * 12);
+                    let monthlyGasKwh = gasUsageFormat === 'monthly' ? gasUsageInput : (gasUsageInput / 12);
+
+                    let monthlyGasEnergyCost = (monthlyGasKwh * gasUnitRate) / 100;
+                    let monthlyGasSCCost = (gasScRate * 365 / 12) / 100;
+                    let totalGasMonthlyCost = monthlyGasEnergyCost + monthlyGasSCCost;
+
+                    document.getElementById('calc-gas-sc').innerText = `£${monthlyGasSCCost.toFixed(2)} / mo`;
+                    document.getElementById('calc-gas-total').innerText = `£${totalGasMonthlyCost.toFixed(2)} / mo`;
+
+                    // Gas Benchmark Check
+                    if (annualGasKwh > 0) {
+                        let gasBenchmark = 11500;
+                        if (totalOccupants <= 1) gasBenchmark = 7500;
+                        else if (totalOccupants <= 3) gasBenchmark = 11500;
+                        else gasBenchmark = 17000;
+
+                        if (annualGasKwh > (gasBenchmark * 1.05)) {
+                            addActionRow("High Gas Consumption", `Gas usage (${annualGasKwh.toFixed(0)} kWh/yr) exceeds national benchmark (${gasBenchmark} kWh)`, "Review boiler flow temp, room thermostat settings, and TRVs.");
+                            document.getElementById('calc-gas-total').classList.add('alert-red');
+                        } else {
+                            document.getElementById('calc-gas-total').classList.remove('alert-red');
+                        }
+                    }
+                }
+                
+                // Boiler / Tank Service Date Check
+                const serviceDateId = (fuelSelect.value === 'oil') ? 'oil-service-date' : 'boiler-service-date';
+                const serviceDateInput = document.getElementById(serviceDateId);
+                if (serviceDateInput && serviceDateInput.value) {
+                    const sDate = new Date(serviceDateInput.value);
+                    const diffDays = Math.ceil(Math.abs(new Date() - sDate) / (1000 * 60 * 60 * 24));
+                    if (diffDays > 365) {
+                        addActionRow("Heating Servicing", "Exceeds 12 months since last service", "Annual safety and efficiency service required.");
+                    }
+                }
+            }
+
+            // Hot Water Automations
+            const isHotWaterScope = document.querySelector('input[data-target="sec-hot-water"]').checked;
+            if (isHotWaterScope && hwHeatedBy.value !== 'instantaneous' && document.getElementById('hw-control').value === 'continuous') {
+                addActionRow("Hot Water", "Immersion set to 'Continuous'", "High cost alert: Reprogram to off-peak timer");
+            }
+
+            // EV Automations
+            const isEvScope = document.querySelector('input[data-target="sec-ev"]').checked;
+            if (isEvScope && evChargerSelect.value === 'granny') {
+                addActionRow("EV Safety & Cost", "EV charging via standard 3-pin socket ('Granny Charger')", "Review socket load capacity and advise on dedicated home EV charger installation.");
+            }
+
+            // Solar PV Automations
+            const isSolarScope = document.querySelector('input[data-target="sec-solar"]').checked;
+            if (isSolarScope) {
+                const solarRate = parseFloat(document.getElementById('solar-rate').value);
+                if (solarRate > 0 && solarRate < 12) {
+                    addActionRow("Solar PV", `Low Export Rate (${solarRate}p)`, "Consider switching export provider for better SEG rate");
+                }
+
+                if (solarExportStatus.value === 'no') {
+                    if (solarAccountStatus.value === 'none') {
+                        addActionRow("Solar PV", "No Online Account Setup", "Account creation required to apply for export funds");
+                    }
+                    
+                    document.querySelectorAll('.doc-chk').forEach(chk => {
+                        if (!chk.checked) {
+                            addActionRow("Solar PV Docs", `Missing: ${chk.getAttribute('data-doc')}`, "Obtain document to facilitate export payments");
+                        }
+                    });
+                }
+            }
+
+            // Re-append user's custom manual rows
+            manualRows.forEach(row => registerBody.appendChild(row));
+        }
+
+        // --- 3. Event Listeners & UI Logic ---
+
+        // Address Header Sync
+        if (addressInput && headerAddress) {
+            addressInput.addEventListener('input', function() {
+                headerAddress.textContent = this.value;
+            });
+        }
+
+        // Scope Toggles (Checkbox section show/hide)
+        function syncScopeSections() {
+            scopeToggles.forEach(toggle => {
+                const targetId = toggle.getAttribute('data-target');
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) {
+                    targetEl.classList.toggle('module-hidden', !toggle.checked);
+                }
+            });
+            runMasterCalculation();
+        }
+        scopeToggles.forEach(t => t.addEventListener('change', syncScopeSections));
+
+        // Add Custom Action Log Item
+        document.getElementById('btn-add-action').addEventListener('click', function() {
+            const tr = document.createElement('tr');
+            tr.className = 'manual-row';
+            tr.innerHTML = `
+                <td><input type="text" placeholder="Category / Item requested by resident"></td>
+                <td><input type="text" placeholder="Recommended Action / Follow-up detail"></td>
+            `;
+            registerBody.appendChild(tr);
+        });
+
+        // Electric Heating Sub-type Toggles (Storage vs ASHP)
+        eHeatRadios.forEach(r => {
+            r.addEventListener('change', () => {
+                const isStorage = document.querySelector('input[name="e_heat"]:checked').value === 'storage';
+                subStorage.classList.toggle('module-hidden', !isStorage);
+                subAshp.classList.toggle('module-hidden', isStorage);
+            });
+        });
+
+        // Gas vs Oil Fuel Selection Toggle
+        fuelSelect.addEventListener('change', () => {
+            const isOil = fuelSelect.value === 'oil';
+            rowGasOnly.forEach(row => row.classList.toggle('module-hidden', isOil));
+            gasCalcWrapper.classList.toggle('module-hidden', isOil);
+            rowOil.classList.toggle('module-hidden', !isOil);
+            runMasterCalculation();
+        });
+
+        // Hot Water Instantaneous Toggle
+        function updateHotWaterView() {
+            const isInstant = hwHeatedBy.value === 'instantaneous';
+            hwConditionalRows.forEach(row => row.classList.toggle('module-hidden', isInstant));
+        }
+        hwHeatedBy.addEventListener('change', updateHotWaterView);
+
+        // EV Charger Visibility Toggle
+        function updateEvView() {
+            const isNone = evChargerSelect.value === 'none';
+            evConditionalRows.forEach(row => row.classList.toggle('module-hidden', isNone));
+        }
+        evChargerSelect.addEventListener('change', updateEvView);
+
+        // Tariff End Date Auto Dropdowns (Electricity & Gas) - Updated with fixed tariff exit fees
+        function generateTariffDates(structureVal, targetSelect) {
+            targetSelect.innerHTML = '';
+            if (structureVal === 'variable') {
+                const d = new Date();
+                const m = d.getMonth() + 1;
+                let nextCap = "1st January (Next Year)";
+                if (m < 4) nextCap = "1st April";
+                else if (m < 7) nextCap = "1st July";
+                else if (m < 9) nextCap = "1st September";
+                
+                const opt = document.createElement('option');
+                opt.value = nextCap;
+                opt.text = "Next Ofgem Cap: " + nextCap;
+                targetSelect.appendChild(opt);
+            } else {
+                const d = new Date();
+                for (let i = 0; i < 24; i++) {
+                    const tempD = new Date(d.getFullYear(), d.getMonth() + i, 1);
+                    const monthStr = tempD.toLocaleString('default', { month: 'long', year: 'numeric' });
+                    const opt = document.createElement('option');
+                    opt.value = monthStr;
+                    opt.text = "Ends: " + monthStr;
+                    targetSelect.appendChild(opt);
+                }
+            }
+        }
+
+        function updateElecDateDropdown() {
+            generateTariffDates(structureSelect.value, dateSelect);
+        }
+        function updateGasDateDropdown() {
+            generateTariffDates(gasStructureSelect.value, gasDateSelect);
+        }
+
+        // Fixed Tariff Exit Fee Toggles (NEW from EnergyAdvice 10)
+        structureSelect.addEventListener('change', () => {
+            const isFixed = structureSelect.value === 'fixed';
+            elecExitFeeRow.classList.toggle('module-hidden', !isFixed);
+            updateElecDateDropdown();
+        });
+        
+        gasStructureSelect.addEventListener('change', () => {
+            const isFixed = gasStructureSelect.value === 'fixed';
+            rowGasExitFee.classList.toggle('module-hidden', !isFixed);
+            updateGasDateDropdown();
+        });
+
+        // Single vs Dual Rate Toggle
+        rateTypeSelect.addEventListener('change', (e) => {
+            const isDual = e.target.value === 'dual';
+            nightRateInput.disabled = !isDual;
+            rowDualSplit.classList.toggle('module-hidden', !isDual);
+        });
+
+        // Solar Export & Account Logic
+        function updateSolarVisibility() {
+            const isNoExport = solarExportStatus.value === 'no';
+            rowSolarAccount.classList.toggle('module-hidden', !isNoExport);
+            solarDocsWrapper.classList.toggle('module-hidden', !isNoExport);
+
+            const isNoAccount = solarAccountStatus.value === 'none';
+            if (isNoExport && isNoAccount) {
+                rowSolarPayment.classList.add('disabled-block');
+                solarDocsWrapper.classList.add('disabled-block');
+            } else {
+                rowSolarPayment.classList.remove('disabled-block');
+                solarDocsWrapper.classList.remove('disabled-block');
+            }
+            runMasterCalculation();
+        }
+        solarExportStatus.addEventListener('change', updateSolarVisibility);
+        solarAccountStatus.addEventListener('change', updateSolarVisibility);
+
+        // Attach global calculation trigger
+        document.querySelectorAll('.trigger-calc').forEach(el => {
+            el.addEventListener('input', runMasterCalculation);
+            el.addEventListener('change', runMasterCalculation);
+        });
+
+        // --- 4. Initialization ---
+        syncScopeSections();
+        updateHotWaterView();
+        updateEvView();
+        updateElecDateDropdown();
+        updateGasDateDropdown();
+        updateSolarVisibility();
+        runMasterCalculation();
+    });
+</script>
 </body>
 </html>

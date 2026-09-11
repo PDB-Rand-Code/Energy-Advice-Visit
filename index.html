@@ -178,7 +178,12 @@
             h1 { font-size: 17px !important; }
             h2 { font-size: 13px !important; margin-top: 15px !important; margin-bottom: 6px !important; }
             h3 { font-size: 12px !important; }
-            .header-top { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 10px !important; padding-bottom: 8px !important; }
+            /* Prevent sections and table wrappers from straddling page breaks */
+            div[id^="sec-"], .table-wrapper {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .header-top { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 10mm !important; padding-bottom: 8px !important; }
             .header-logo { max-height: 45px !important; }
             th, td { padding: 4px 6px !important; font-size: 10.5px !important; }
             input[type="checkbox"], input[type="radio"] { width: 14px !important; height: 14px !important; }
@@ -255,6 +260,32 @@
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-battery"> Battery </label> &nbsp;|&nbsp;
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-ev"> EV </label>
                 </td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>ENERGY TOTALS</h2>
+    <div class="table-wrapper" id="energy-totals-wrapper">
+        <table>
+            <tr id="total-row-elec">
+                <th style="width: 50%;">Electric Supply Monthly Cost:</th>
+                <td><input type="text" id="summary-elec-cost" class="calc-output" readonly placeholder="£0.00"></td>
+            </tr>
+            <tr id="total-row-gas" class="module-hidden">
+                <th>Gas Heating Monthly Cost:</th>
+                <td><input type="text" id="summary-gas-cost" class="calc-output" readonly placeholder="£0.00"></td>
+            </tr>
+            <tr id="total-row-oil" class="module-hidden">
+                <th>Oil Heating Estimated Monthly Cost:</th>
+                <td><input type="text" id="summary-oil-cost" class="calc-output" readonly placeholder="£0.00"></td>
+            </tr>
+            <tr id="total-row-solar" class="module-hidden">
+                <th>Solar Export Monthly Earnings (Credit):</th>
+                <td><input type="text" id="summary-solar-earnings" class="calc-output" readonly placeholder="£0.00"></td>
+            </tr>
+            <tr class="totals-row">
+                <th>Estimated Overall Net Monthly Total:</th>
+                <td><input type="text" id="summary-overall-total" class="calc-output" readonly style="font-weight: bold; font-size: 1.1em;" placeholder="£0.00"></td>
             </tr>
         </table>
     </div>
@@ -1301,6 +1332,7 @@
 
             // Solar PV Automations (Conservative East Aspect Estimation)
             const isSolarScope = document.querySelector('input[data-target="sec-solar"]').checked;
+            let solarEarningsVal = 0;
             if (isSolarScope) {
                 const solarRate = parseFloat(document.getElementById('solar-rate').value) || 0;
                 const solarAnnualOutput = parseFloat(document.getElementById('solar-annual-output').value) || 0;
@@ -1311,10 +1343,10 @@
                     const eastFacingGeneration = solarAnnualOutput * 0.75;
                     const annualExportKwh = eastFacingGeneration * 0.50;
                     const monthlyExportKwh = annualExportKwh / 12;
-                    const monthlyExportEarnings = (monthlyExportKwh * solarRate) / 100;
+                    solarEarningsVal = (monthlyExportKwh * solarRate) / 100;
 
                     if (calcSolarExportKwhEl) calcSolarExportKwhEl.value = monthlyExportKwh.toFixed(1) + " kWh / mo";
-                    if (calcSolarExportCostEl) calcSolarExportCostEl.value = monthlyExportEarnings > 0 ? "£" + monthlyExportEarnings.toFixed(2) + " / mo" : "£0.00 / mo";
+                    if (calcSolarExportCostEl) calcSolarExportCostEl.value = solarEarningsVal > 0 ? "£" + solarEarningsVal.toFixed(2) + " / mo" : "£0.00 / mo";
                 } else {
                     if (calcSolarExportKwhEl) calcSolarExportKwhEl.value = "";
                     if (calcSolarExportCostEl) calcSolarExportCostEl.value = "";
@@ -1342,6 +1374,45 @@
                     });
                 }
             }
+
+            // Energy Totals Summary Aggregation
+            const isFuelScopeActive = document.querySelector('input[data-target="sec-fuel"]').checked;
+            const fuelVal = fuelSelect.value;
+            const totalRowGas = document.getElementById('total-row-gas');
+            const totalRowOil = document.getElementById('total-row-oil');
+            const totalRowSolar = document.getElementById('total-row-solar');
+
+            let elecCostVal = parseFloat((document.getElementById('calc-total').value || "0").replace('£', '')) || 0;
+            let gasCostVal = 0;
+            let oilCostVal = 0;
+
+            totalRowGas.classList.add('module-hidden');
+            totalRowOil.classList.add('module-hidden');
+            totalRowSolar.classList.add('module-hidden');
+
+            if (isFuelScopeActive) {
+                if (fuelVal === 'gas') {
+                    totalRowGas.classList.remove('module-hidden');
+                    const gasTotalStr = document.getElementById('calc-gas-total').innerText || "£0";
+                    gasCostVal = parseFloat(gasTotalStr.replace('£', '').replace('/ mo', '').trim()) || 0;
+                    document.getElementById('summary-gas-cost').value = "£" + gasCostVal.toFixed(2);
+                } else if (fuelVal === 'oil') {
+                    totalRowOil.classList.remove('module-hidden');
+                    const oilAnnualCost = parseFloat(document.getElementById('oil-cost-previous-year').value) || 0;
+                    oilCostVal = oilAnnualCost / 12;
+                    document.getElementById('summary-oil-cost').value = "£" + oilCostVal.toFixed(2);
+                }
+            }
+
+            if (isSolarScope) {
+                totalRowSolar.classList.remove('module-hidden');
+                document.getElementById('summary-solar-earnings').value = "£" + solarEarningsVal.toFixed(2);
+            }
+
+            document.getElementById('summary-elec-cost').value = "£" + elecCostVal.toFixed(2);
+
+            let overallNetTotal = elecCostVal + (fuelVal === 'gas' ? gasCostVal : oilCostVal) - solarEarningsVal;
+            document.getElementById('summary-overall-total').value = "£" + (overallNetTotal > 0 ? overallNetTotal.toFixed(2) : "0.00");
 
             // Restore manual action log rows and refresh textarea heights
             manualRows.forEach(row => registerBody.appendChild(row));

@@ -60,6 +60,7 @@
             margin-top: 8px;
             min-height: 20px;
         }
+        
         h2, h3 {
             color: #004080;
             border-bottom: 2px solid #004080;
@@ -119,7 +120,8 @@
             font-size: 1.1em;
         }
         textarea {
-            resize: vertical;
+            resize: none; 
+            overflow: hidden !important; 
             min-height: 80px;
         }
         
@@ -127,7 +129,7 @@
         .manual-row { background-color: #f0fdf4; }
         .module-hidden { display: none !important; }
         .disabled-block { opacity: 0.4; pointer-events: none; background-color: #f2f2f2; }
-        .alert-red { background-color: #ffe6e6 !important; color: #cc0000 !important; font-weight: bold; }
+        .alert-red { background-color: #ffe6e6 !important; color: #cc0000 !important; font-weight: bold; font-size: 12px !important; }
         
         .btn-action {
             background-color: #004080;
@@ -139,10 +141,10 @@
             cursor: pointer;
             font-weight: bold;
             margin-top: 10px;
+            min-height: 38px;
+            display: inline-block;
         }
-        .btn-action:hover {
-            background-color: #002850;
-        }
+        .btn-action:hover { background-color: #002850; }
         .btn-delete {
             background-color: #cc0000;
             color: white;
@@ -151,7 +153,9 @@
             padding: 6px 12px;
             cursor: pointer;
             font-weight: bold;
+            min-height: 30px;
         }
+        .btn-delete:hover { background-color: #990000; }
 
         .declaration-text {
             font-size: 14px;
@@ -159,22 +163,39 @@
             line-height: 1.5;
         }
 
-        .checklist-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .checklist-group label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .checklist-group { display: flex; flex-direction: column; gap: 10px; }
+        .checklist-group label { display: flex; align-items: center; gap: 10px; }
+
+        @page { size: A4 portrait; margin: 10mm 8mm; }
 
         @media print {
-            body { background-color: #fff; margin: 0; padding: 0; }
-            .container { box-shadow: none; padding: 0; }
-            input, textarea, select, .btn-action, .btn-delete { border: 1px solid #ddd; }
-            .btn-action, .btn-delete { display: none; }
+            body { 
+                background-color: #fff; margin: 0; padding: 0; 
+                font-size: 11px; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            .container { box-shadow: none; padding: 0; max-width: 100%; width: 100%; }
+            h1, h2, h3, h4 { break-after: avoid; page-break-after: avoid; }
+            h1 { font-size: 17px !important; }
+            h2 { font-size: 13px !important; margin-top: 15px !important; margin-bottom: 6px !important; }
+            h3 { font-size: 12px !important; }
+            .header-top { break-inside: avoid !important; page-break-inside: avoid !important; margin-bottom: 10px !important; padding-bottom: 8px !important; }
+            .header-logo { max-height: 45px !important; }
+            th, td { padding: 4px 6px !important; font-size: 10.5px !important; }
+            input[type="checkbox"], input[type="radio"] { width: 14px !important; height: 14px !important; }
+            tr { break-inside: avoid !important; page-break-inside: avoid !important; }
+            table { page-break-inside: auto; margin-bottom: 10px !important; }
+            input, textarea, select { 
+                border: 1px solid #bbb; background: transparent !important; box-shadow: none !important;
+                font-size: 10.5px !important; padding: 3px 5px !important;
+            }
+            textarea { overflow: visible !important; }
+            ::placeholder { color: transparent !important; }
+            .btn-action, .btn-delete { display: none !important; }
+            .auto-populated { background-color: #fff3e6 !important; }
+            .manual-row { background-color: #f0fdf4 !important; }
+            .alert-red { background-color: #ffe6e6 !important; color: #cc0000 !important; }
+            .calc-output { background-color: #eef7ff !important; color: #004080 !important; }
+            .totals-row th, .totals-row td { background-color: #e6f0fa !important; }
         }
     </style>
 </head>
@@ -192,7 +213,6 @@
         </div>
     </div>
 
-    <!-- GENERAL SECTION -->
     <h2>GENERAL</h2>
     <div class="table-wrapper">
         <table>
@@ -204,7 +224,7 @@
             </tr>
             <tr>
                 <th rowspan="2">Address:</th>
-                <td rowspan="2"><textarea id="prop-address" placeholder="Enter full address..." style="height: 100px;"></textarea></td>
+                <td rowspan="2"><textarea id="prop-address" placeholder="Enter full address..."></textarea></td>
                 <th>Occupancy (Adults):</th>
                 <td><input type="number" id="occ-adults" class="trigger-calc" value="1" min="1"></td>
             </tr>
@@ -239,7 +259,6 @@
         </table>
     </div>
 
-    <!-- ACTION LOG -->
     <h2>ACTION LOG</h2>
     <p><em>Automatically captures identified risks and allows custom advisor inputs.</em></p>
     <div class="table-wrapper">
@@ -257,7 +276,6 @@
         <button type="button" id="btn-add-action" class="btn-action">+ Add Custom Action Item</button>
     </div>
 
-    <!-- ELECTRICITY SUPPLY & TARIFF -->
     <div id="sec-elec">
         <h2>ELECTRICITY SUPPLY & TARIFF</h2>
         <div class="table-wrapper">
@@ -308,6 +326,12 @@
                         </select>
                     </td>
                 </tr>
+                <tr>
+                    <th>Energy Debt / Arrears Status (£)</th>
+                    <td colspan="3">
+                        <input type="number" id="debt-status" class="trigger-calc" placeholder="Enter arrears amount (£ e.g. 200)" min="0" value="0" style="width: 50%;">
+                    </td>
+                </tr>
             </table>
             
             <h4 style="margin-top: 15px;">Calculations & Usage (Before Tax)</h4>
@@ -351,23 +375,10 @@
         </div>
     </div>
 
-    <!-- APPLIANCE USAGE -->
     <div id="sec-app">
         <h2>APPLIANCE USAGE</h2>
         <div class="table-wrapper">
             <table>
-                <tr>
-                    <th>Energy Debt / Arrears Status</th>
-                    <td colspan="3">
-                        <select id="debt-status" class="trigger-calc" style="width: 50%;">
-                            <option value="0">No Arrears</option>
-                            <option value="150">Under £150</option>
-                            <option value="500">£150 - £1,000 (Supplier Switch blocked)</option>
-                            <option value="1000">£1,000 - £1,500 (Supplier Switch blocked)</option>
-                            <option value="5000">£1,500 - £5,000+ (Supplier Switch blocked)</option>
-                        </select>
-                    </td>
-                </tr>
                 <tr>
                     <th>Appliance</th>
                     <th>Frequency / Setup (Avg Month)</th>
@@ -462,7 +473,6 @@
         </div>
     </div>
 
-    <!-- ADDITIONAL FUEL HEATING (Renamed from Gas & Oil Heating) -->
     <div id="sec-fuel" class="module-hidden">
         <h2>ADDITIONAL FUEL HEATING</h2>
         <div class="table-wrapper">
@@ -503,7 +513,6 @@
                         <td><input type="date" id="boiler-service-date" class="trigger-calc"></td>
                     </tr>
                     
-                    <!-- Gas Calculations & Usage Section -->
                     <tr class="row-gas-only">
                         <th colspan="4" style="text-align: center; background: #e6f0fa;">Gas Calculations & Usage (Before Tax)</th>
                     </tr>
@@ -566,7 +575,7 @@
                 </table>
             </div>
 
-            <!-- Heating Controls (Shared for both Gas and Oil) -->
+            <!-- Heating Controls -->
             <table>
                 <tr>
                     <th>Heating Controls Present</th>
@@ -583,7 +592,6 @@
         </div>
     </div>
 
-    <!-- ELECTRIC HEATING -->
     <div id="sec-elec-heat" class="module-hidden">
         <h2>ELECTRIC HEATING</h2>
         <div class="table-wrapper">
@@ -674,7 +682,6 @@
         </div>
     </div>
 
-    <!-- HOT WATER -->
     <div id="sec-hot-water" class="module-hidden">
         <h2>HOT WATER CYLINDER</h2>
         <div class="table-wrapper">
@@ -685,10 +692,23 @@
                         <select id="hw-heated-by" class="trigger-calc">
                             <option value="main">Main Heating System (Boiler/ASHP)</option>
                             <option value="immersion">Immersion Heater Only</option>
-                            <option value="both">Both</option>
+                            <option value="both">Both - Heating system and Immersion</option>
                             <option value="instantaneous">Instantaneous unit</option>
                         </select>
                     </td>
+                </tr>
+                <tr>
+                    <th>Cylinder Size / Capacity</th>
+                    <td>
+                        <select id="hw-tank-size" class="trigger-calc">
+                            <option value="120">Small (approx. 120 Litres)</option>
+                            <option value="150" selected>Standard (approx. 150 Litres)</option>
+                            <option value="210">Large (approx. 210 Litres)</option>
+                            <option value="250">Extra Large (250+ Litres)</option>
+                        </select>
+                    </td>
+                    <th>Est. Monthly Running Cost</th>
+                    <td><input type="text" id="calc-hw-cost" class="calc-output" readonly placeholder="£0.00"></td>
                 </tr>
                 <tr class="hw-conditional-row">
                     <th>Immersion Setup</th>
@@ -720,7 +740,6 @@
         </div>
     </div>
 
-    <!-- SOLAR PV -->
     <div id="sec-solar" class="module-hidden">
         <h2>SOLAR PANELS</h2>
         <div class="table-wrapper">
@@ -738,7 +757,19 @@
                         <input type="number" step="0.01" id="solar-rate" class="trigger-calc" placeholder="Enter Rate">
                     </td>
                 </tr>
-                <tr id="row-solar-account" class="module-hidden">
+                <tr>
+                    <th>Max Solar Output / Annual Panel Output (kWh)</th>
+                    <td colspan="3">
+                        <input type="number" id="solar-annual-output" class="trigger-calc" placeholder="e.g. 3500 kWh">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Est. Monthly Average Export (East Aspect / Conservative)</th>
+                    <td><input type="text" id="calc-solar-export-kwh" class="calc-output" readonly placeholder="0 kWh / mo"></td>
+                    <th>Est. Monthly Export Earnings</th>
+                    <td><input type="text" id="calc-solar-export-cost" class="calc-output" readonly placeholder="£0.00 / mo"></td>
+                </tr>
+                <tr id="row-solar-account">
                     <th>Energy Company Online Account</th>
                     <td colspan="3">
                         <select id="solar-account-status" class="trigger-calc">
@@ -776,7 +807,6 @@
         </div>
     </div>
 
-    <!-- BATTERY STORAGE -->
     <div id="sec-battery" class="module-hidden">
         <h2>BATTERY STORAGE</h2>
         <div class="table-wrapper">
@@ -805,7 +835,6 @@
         </div>
     </div>
 
-    <!-- ELECTRIC VEHICLE -->
     <div id="sec-ev" class="module-hidden">
         <h2>ELECTRIC VEHICLE (EV) CHARGING</h2>
         <div class="table-wrapper">
@@ -850,7 +879,6 @@
         </div>
     </div>
 
-    <!-- DECLARATION -->
     <h2>DECLARATION</h2>
     <div class="declaration-text">
         <ol>
@@ -886,43 +914,112 @@
         const headerAddress = document.getElementById('header-address');
         const registerBody = document.getElementById('remedial-register-body');
         const scopeToggles = document.querySelectorAll('.scope-toggle');
-        const eHeatRadios = document.querySelectorAll('input[name="e_heat"]');
-        const subStorage = document.getElementById('sub-storage');
-        const subAshp = document.getElementById('sub-ashp');
+        
+        const rateTypeSelect = document.getElementById('rate-type-select');
+        const usageInputEl = document.getElementById('usage-input');
+        const rateNightInput = document.getElementById('rate-night');
+        const rowDualSplit = document.getElementById('row-dual-split');
+        
         const fuelSelect = document.getElementById('heating-fuel');
         const gasFields = document.getElementById('gas-fields');
         const oilFields = document.getElementById('oil-fields');
+        
+        const eHeatRadios = document.querySelectorAll('input[name="e_heat"]');
+        const subStorage = document.getElementById('sub-storage');
+        const subAshp = document.getElementById('sub-ashp');
+        
         const hwHeatedBy = document.getElementById('hw-heated-by');
         const hwConditionalRows = document.querySelectorAll('.hw-conditional-row');
+        
         const evChargerSelect = document.getElementById('ev-charger-present');
         const evConditionalRows = document.querySelectorAll('.ev-conditional-row');
-        const structureSelect = document.getElementById('tariff-structure');
-        const dateSelect = document.getElementById('tariff-date-select');
-        const gasStructureSelect = document.getElementById('gas-tariff-structure');
-        const gasDateSelect = document.getElementById('gas-tariff-date-select');
-        const rateTypeSelect = document.getElementById('rate-type-select');
-        const nightRateInput = document.getElementById('rate-night');
-        const rowDualSplit = document.getElementById('row-dual-split');
+        
         const solarExportStatus = document.getElementById('solar-export-status');
         const rowSolarAccount = document.getElementById('row-solar-account');
         const rowSolarPayment = document.getElementById('row-solar-payment');
         const solarAccountStatus = document.getElementById('solar-account-status');
         const solarDocsWrapper = document.getElementById('solar-docs-wrapper');
-        const elecExitFeeRow = document.getElementById('row-elec-exit-fee');
-        const rowGasExitFee = document.getElementById('row-gas-exit-fee');
+        
         const companyLogo = document.getElementById('company-logo');
 
-        // Set logo source from uploaded image
-        if (companyLogo) {
-            companyLogo.src = 'https://lumo-proton.s3.amazonaws.com/f8612d63-206c-4ea7-9054-810206777a4a.png';
-            companyLogo.onerror = function() {
-                this.style.display = 'none';
-            };
+        // --- Layout Helpers (Autosize Textarea & Header Sync) ---
+        function autoResizeTextarea(el) {
+            el.style.height = 'auto'; 
+            el.style.height = (el.scrollHeight + 4) + 'px'; 
+        }
+        
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName.toLowerCase() === 'textarea') {
+                autoResizeTextarea(e.target);
+            }
+        });
+
+        window.addEventListener('beforeprint', function() {
+            document.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
+        });
+
+        if (addressInput && headerAddress) {
+            addressInput.addEventListener('input', function() {
+                headerAddress.textContent = this.value;
+            });
         }
 
-        // --- 2. Master Calculation & Automation Engine ---
+        // --- Visibility Toggles ---
+        function updateVisibility() {
+            // Dual Rate Toggle
+            if(rateTypeSelect.value === 'dual') {
+                rowDualSplit.classList.remove('module-hidden');
+                usageInputEl.disabled = true;
+                rateNightInput.disabled = false;
+            } else {
+                rowDualSplit.classList.add('module-hidden');
+                usageInputEl.disabled = false;
+                rateNightInput.disabled = true;
+                rateNightInput.value = '';
+            }
+
+            // Additional Fuel
+            const fuel = fuelSelect.value;
+            gasFields.classList.toggle('module-hidden', fuel !== 'gas');
+            oilFields.classList.toggle('module-hidden', fuel !== 'oil');
+            
+            // Elec Heating
+            const eHeat = document.querySelector('input[name="e_heat"]:checked')?.value;
+            subStorage.classList.toggle('module-hidden', eHeat !== 'storage');
+            subAshp.classList.toggle('module-hidden', eHeat !== 'ashp');
+
+            // Hot Water Conditional (Immersion)
+            const hwHeat = hwHeatedBy.value;
+            hwConditionalRows.forEach(row => {
+                row.classList.toggle('module-hidden', hwHeat === 'instantaneous');
+            });
+
+            // Solar UI Flow
+            const solarExp = solarExportStatus.value;
+            rowSolarAccount.classList.toggle('module-hidden', solarExp !== 'yes');
+            rowSolarPayment.classList.toggle('module-hidden', solarExp !== 'yes');
+            const solarAcc = solarAccountStatus.value;
+            solarDocsWrapper.classList.toggle('module-hidden', solarAcc !== 'none');
+
+            // EV UI Flow
+            const ev = evChargerSelect.value;
+            evConditionalRows.forEach(row => {
+                row.classList.toggle('module-hidden', ev === 'none');
+            });
+            
+            document.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
+        }
+
+        // Attach listeners for visibility
+        rateTypeSelect.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); });
+        fuelSelect.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); });
+        eHeatRadios.forEach(r => r.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); }));
+        hwHeatedBy.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); });
+        solarExportStatus.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); });
+        solarAccountStatus.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); });
+        evChargerSelect.addEventListener('change', function() { updateVisibility(); runMasterCalculation(); });
+
         function runMasterCalculation() {
-            // Save manual rows added by user
             const manualRows = Array.from(registerBody.querySelectorAll('tr.manual-row'));
             registerBody.innerHTML = '';
 
@@ -931,15 +1028,14 @@
                 tr.className = 'auto-populated';
                 tr.innerHTML = `
                     <td><strong>${category}</strong><br>${item}</td>
-                    <td><input type="text" value="${remedialAction}"></td>
+                    <td><textarea readonly style="width:100%; border:none; background:transparent;">${remedialAction}</textarea></td>
                 `;
                 registerBody.appendChild(tr);
             }
 
-            // Process Manual Action Logic Checks - Only trigger if gas section is visible (not oil)
+            // Manual Action Checks
             document.querySelectorAll('.action-req-cb').forEach(cb => {
                 if (cb.checked && !cb.closest('.module-hidden')) {
-                    // Only add action if gas heating is selected (not oil)
                     const isGas = fuelSelect.value === 'gas' && !fuelSelect.closest('.module-hidden');
                     if (isGas || fuelSelect.closest('.module-hidden') === null) {
                         addActionRow(cb.getAttribute('data-category'), cb.getAttribute('data-item'), "Action required");
@@ -952,32 +1048,33 @@
             const children = parseInt(document.getElementById('occ-children').value) || 0;
             const totalOccupants = adults + children;
 
-            // Priority Services Register Rules
+            // Vulnerabilities
             if (document.getElementById('psr-child').checked) addActionRow("Vulnerability (PSR)", "Child < 5 in property", "Register on Priority Services Register");
-            if (document.getElementById('psr-adult').checked) addActionRow("Vulnerability (PSR)", "Adult > 65 in property", "Register on Priority Services Register");
+            if (document.getElementById('psr-adult').checked) addActionRow("Vulnerability (PSR)", "Adult > 65 in property", "Register on Priority Services Register. Discuss winter fuel risks.");
 
             // Payment & Debt Rules
             if (document.getElementById('payment-method').value === 'not_paying') {
                 addActionRow("Financial Hardship", "Not contributing to energy bills", "Urgent referral for debt support / LEAP / Fuel vouchers");
             }
-            const debtValue = parseInt(document.getElementById('debt-status').value);
-            if (debtValue >= 500) {
-                addActionRow("Financial / Switching", "Debt over £150", "Supplier switch blocked due to debt protocol. Resolve arrears first.");
+            
+            // Energy Debt numeric check (> £150)
+            const debtValue = parseFloat(document.getElementById('debt-status').value) || 0;
+            if (debtValue > 150) {
+                addActionRow("Financial / Switching", `Energy debt over £150 (£${debtValue.toFixed(2)})`, "Urgent referral for debt support / LEAP / Fuel vouchers. Supplier switch blocked due to debt protocol.");
             }
 
-            // Electricity Section Automations
+            // Electricity Calculation
             const isElecScope = document.querySelector('input[data-target="sec-elec"]').checked;
             const usageFormat = document.getElementById('usage-format').value;
             let usageInput = parseFloat(document.getElementById('usage-input').value) || 0;
             const dayRate = parseFloat(document.getElementById('rate-day').value) || 0;
-            const nightRate = parseFloat(document.getElementById('rate-night').value) || 0;
+            const nightRate = parseFloat(rateNightInput.value) || 0;
             const scRate = parseFloat(document.getElementById('rate-sc').value) || 0;
             const isDual = rateTypeSelect.value === 'dual';
 
             let annualUsageKwh = usageFormat === 'annual' ? usageInput : (usageInput * 12);
             let monthlyUsageKwh = usageFormat === 'monthly' ? usageInput : (usageInput / 12);
 
-            // Electricity Cost calculation
             let monthlyEnergyCost = 0;
             if (isDual) {
                 const dayUsageInput = parseFloat(document.getElementById('usage-day').value) || 0;
@@ -988,15 +1085,13 @@
                 
                 const totalSplitKwh = dayUsageInput + nightUsageInput;
                 const splitOutput = document.getElementById('night-split-output');
-                if (totalSplitKwh > 0) {
+                if (totalSplitKwh > 0 && splitOutput) {
                     const nightPct = (nightUsageInput / totalSplitKwh) * 100;
                     splitOutput.value = nightPct.toFixed(1) + "%";
                     
                     if (nightPct < 40) {
                         splitOutput.classList.add('alert-red');
-                        if (isElecScope) {
-                            addActionRow("Economy 7", `Off-peak usage is only ${nightPct.toFixed(1)}%`, "Single rate tariff may be cheaper. Model switch.");
-                        }
+                        if (isElecScope) addActionRow("Economy 7", `Off-peak usage is only ${nightPct.toFixed(1)}%`, "Single rate tariff may be cheaper. Model switch.");
                     } else {
                         splitOutput.classList.remove('alert-red');
                     }
@@ -1008,11 +1103,11 @@
             const monthlySCCost = (scRate * 365 / 12) / 100;
             const totalMonthlyCost = monthlyEnergyCost + monthlySCCost;
 
-            document.getElementById('calc-energy').value = "£" + monthlyEnergyCost.toFixed(2);
-            document.getElementById('calc-sc').value = "£" + monthlySCCost.toFixed(2);
-            document.getElementById('calc-total').value = "£" + totalMonthlyCost.toFixed(2);
+            document.getElementById('calc-energy').value = monthlyEnergyCost > 0 ? "£" + monthlyEnergyCost.toFixed(2) : "";
+            document.getElementById('calc-sc').value = monthlySCCost > 0 ? "£" + monthlySCCost.toFixed(2) : "";
+            document.getElementById('calc-total').value = totalMonthlyCost > 0 ? "£" + totalMonthlyCost.toFixed(2) : "";
 
-            // Benchmark Analysis - Electricity
+            // Benchmark Analysis
             if (isElecScope && annualUsageKwh > 0) {
                 const isElecHeat = document.querySelector('input[data-target="sec-elec-heat"]').checked;
                 let benchmark = 2700; 
@@ -1034,84 +1129,67 @@
                 }
             }
 
-            // Appliance Usage Section Automations
+            // Appliance Logic
             const isAppScope = document.querySelector('input[data-target="sec-app"]').checked;
             const unitRateCalc = (isDual && dayRate > 0) ? dayRate : (dayRate > 0 ? dayRate : 24.5);
             let totalAppKwh = 0;
             let totalAppCost = 0;
             const waterNote = " It may be worth speaking to the water company.";
 
-            // Washing Machine
-            const washFreq = parseInt(document.getElementById('app-wash').value) || 0;
-            const washKwh = washFreq * 0.7;
-            const washCost = (washKwh * unitRateCalc) / 100;
-            document.getElementById('app-wash-kwh').value = washKwh.toFixed(1);
-            document.getElementById('app-wash-cost').value = "£" + washCost.toFixed(2);
-            totalAppKwh += washKwh; totalAppCost += washCost;
-            if (isAppScope && washFreq > 15 && totalOccupants <= 2) {
-                addActionRow("Appliance Overuse", "Washing Machine used >3 times/week for small household", "Advise full loads / 30°C cycles." + waterNote);
+            if (isAppScope) {
+                const washFreq = parseInt(document.getElementById('app-wash').value) || 0;
+                const washKwh = washFreq * 0.7;
+                const washCost = (washKwh * unitRateCalc) / 100;
+                document.getElementById('app-wash-kwh').value = washKwh.toFixed(1);
+                document.getElementById('app-wash-cost').value = "£" + washCost.toFixed(2);
+                totalAppKwh += washKwh; totalAppCost += washCost;
+                if (washFreq > 15 && totalOccupants <= 2) addActionRow("Appliance Overuse", "Washing Machine used >3 times/week for small household", "Advise full loads / 30°C cycles." + waterNote);
+
+                const dryFreq = parseInt(document.getElementById('app-dryer').value) || 0;
+                const dryKwh = dryFreq * 2.5;
+                const dryCost = (dryKwh * unitRateCalc) / 100;
+                document.getElementById('app-dryer-kwh').value = dryKwh.toFixed(1);
+                document.getElementById('app-dryer-cost').value = "£" + dryCost.toFixed(2);
+                totalAppKwh += dryKwh; totalAppCost += dryCost;
+                if (dryFreq > 8) addActionRow("Appliance Overuse", "Tumble Dryer frequent usage", "Discuss passive drying alternatives." + waterNote);
+
+                const showerMins = parseInt(document.getElementById('app-shower').value) || 0;
+                const showerKwh = showerMins * 0.141;
+                const showerCost = (showerKwh * unitRateCalc) / 100;
+                document.getElementById('app-shower-kwh').value = showerKwh.toFixed(1);
+                document.getElementById('app-shower-cost').value = "£" + showerCost.toFixed(2);
+                totalAppKwh += showerKwh; totalAppCost += showerCost;
+                if (showerMins > 300 && totalOccupants <= 2) addActionRow("Appliance Overuse", "Electric Shower > 10 mins per person/day", "Provide 4-minute shower timers." + waterNote);
+
+                const fridgeVal = parseInt(document.getElementById('app-fridge').value) || 0;
+                const fridgeCost = (fridgeVal * unitRateCalc) / 100;
+                document.getElementById('app-fridge-kwh').value = fridgeVal.toFixed(1);
+                document.getElementById('app-fridge-cost').value = "£" + fridgeCost.toFixed(2);
+                totalAppKwh += fridgeVal; totalAppCost += fridgeCost;
+                if (fridgeVal > 50) addActionRow("Appliance Efficiency", "Fridge/Freezer old or faulty", "Check seal / Defrost / Ensure ventilation.");
+
+                const hQty = parseInt(document.getElementById('app-heater-qty').value) || 0;
+                const hHrs = parseInt(document.getElementById('app-heater-hrs').value) || 0;
+                const hKwh = hQty * hHrs * 2 * 28;
+                const hCost = (hKwh * unitRateCalc) / 100;
+                document.getElementById('app-heater-kwh').value = hKwh.toFixed(1);
+                document.getElementById('app-heater-cost').value = "£" + hCost.toFixed(2);
+                totalAppKwh += hKwh; totalAppCost += hCost;
+                if (hKwh > 100) addActionRow("Heating Behavior", "High reliance on plug-in heaters", "Extremely expensive point-source heating. Diagnose primary heating failure.");
+
+                const ovenHrs = parseInt(document.getElementById('app-oven').value) || 0;
+                const ovenKwh = ovenHrs * 3;
+                const ovenCost = (ovenKwh * unitRateCalc) / 100;
+                document.getElementById('app-oven-kwh').value = ovenKwh.toFixed(1);
+                document.getElementById('app-oven-cost').value = "£" + ovenCost.toFixed(2);
+                totalAppKwh += ovenKwh; totalAppCost += ovenCost;
+                if (ovenHrs > 84) addActionRow("Appliance Overuse", "High Electric Oven/Hob usage", "Advise use of microwave, slow cooker, or air fryer for efficiency.");
+
+                document.getElementById('app-total-kwh').value = totalAppKwh.toFixed(1);
+                document.getElementById('app-total-cost').value = "£" + totalAppCost.toFixed(2);
             }
 
-            // Tumble Dryer
-            const dryFreq = parseInt(document.getElementById('app-dryer').value) || 0;
-            const dryKwh = dryFreq * 2.5;
-            const dryCost = (dryKwh * unitRateCalc) / 100;
-            document.getElementById('app-dryer-kwh').value = dryKwh.toFixed(1);
-            document.getElementById('app-dryer-cost').value = "£" + dryCost.toFixed(2);
-            totalAppKwh += dryKwh; totalAppCost += dryCost;
-            if (isAppScope && dryFreq > 8) {
-                addActionRow("Appliance Overuse", "Tumble Dryer frequent usage", "Discuss passive drying alternatives." + waterNote);
-            }
-
-            // Electric Shower
-            const showerMins = parseInt(document.getElementById('app-shower').value) || 0;
-            const showerKwh = showerMins * 0.141;
-            const showerCost = (showerKwh * unitRateCalc) / 100;
-            document.getElementById('app-shower-kwh').value = showerKwh.toFixed(1);
-            document.getElementById('app-shower-cost').value = "£" + showerCost.toFixed(2);
-            totalAppKwh += showerKwh; totalAppCost += showerCost;
-            if (isAppScope && showerMins > 300 && totalOccupants <= 2) {
-                addActionRow("Appliance Overuse", "Electric Shower > 10 mins per person/day", "Provide 4-minute shower timers." + waterNote);
-            }
-
-            // Fridge/Freezer
-            const fridgeVal = parseInt(document.getElementById('app-fridge').value) || 0;
-            const fridgeKwh = fridgeVal;
-            const fridgeCost = (fridgeKwh * unitRateCalc) / 100;
-            document.getElementById('app-fridge-kwh').value = fridgeKwh.toFixed(1);
-            document.getElementById('app-fridge-cost').value = "£" + fridgeCost.toFixed(2);
-            totalAppKwh += fridgeKwh; totalAppCost += fridgeCost;
-            if (isAppScope && fridgeKwh > 50) {
-                addActionRow("Appliance Efficiency", "Fridge/Freezer old or faulty", "Check seal / Defrost / Ensure ventilation.");
-            }
-
-            // Plug-in Heaters
-            const hQty = parseInt(document.getElementById('app-heater-qty').value) || 0;
-            const hHrs = parseInt(document.getElementById('app-heater-hrs').value) || 0;
-            const hKwh = hQty * hHrs * 2 * 28;
-            const hCost = (hKwh * unitRateCalc) / 100;
-            document.getElementById('app-heater-kwh').value = hKwh.toFixed(1);
-            document.getElementById('app-heater-cost').value = "£" + hCost.toFixed(2);
-            totalAppKwh += hKwh; totalAppCost += hCost;
-            if (isAppScope && hKwh > 100) {
-                addActionRow("Heating Behavior", "High reliance on plug-in heaters", "Extremely expensive point-source heating. Diagnose primary heating failure.");
-            }
-
-            // Oven
-            const ovenHrs = parseInt(document.getElementById('app-oven').value) || 0;
-            const ovenKwh = ovenHrs * 3;
-            const ovenCost = (ovenHrs * unitRateCalc) / 100;
-            document.getElementById('app-oven-kwh').value = ovenKwh.toFixed(1);
-            document.getElementById('app-oven-cost').value = "£" + ovenCost.toFixed(2);
-            totalAppKwh += ovenKwh; totalAppCost += ovenCost;
-            if (isAppScope && ovenHrs > 84) {
-                addActionRow("Appliance Overuse", "High Electric Oven/Hob usage", "Advise use of microwave, slow cooker, or air fryer for efficiency.");
-            }
-
-            document.getElementById('app-total-kwh').value = totalAppKwh.toFixed(1);
-            document.getElementById('app-total-cost').value = "£" + totalAppCost.toFixed(2);
-
-            // Storage Heating Automations
+            // Storage Heating Logic
             const isElecHeatScope = document.querySelector('input[data-target="sec-elec-heat"]').checked;
             if (isElecHeatScope && document.querySelector('input[name="e_heat"]:checked')?.value === 'storage') {
                 const age = document.getElementById('storage-age').value;
@@ -1123,267 +1201,200 @@
                     kWhPerHeater = 22;
                     addActionRow("Heating System", "Out of date storage heater", "Upgrade required via social housing provider schemes");
                 }
-
                 const nightRateVal = nightRate > 0 ? nightRate : (dayRate > 0 ? dayRate : 24.5);
                 const estOvernightCost = (qty * kWhPerHeater * nightRateVal) / 100;
-                document.getElementById('calc-overnight-charge').value = "£" + estOvernightCost.toFixed(2);
+                document.getElementById('calc-overnight-charge').value = estOvernightCost > 0 ? "£" + estOvernightCost.toFixed(2) : "";
             }
 
-            // Gas/Oil Automations & Calculations (now sec-fuel)
+            // Gas Heating Logic & Calculations
             const isFuelScope = document.querySelector('input[data-target="sec-fuel"]').checked;
-            if (isFuelScope) {
-                if (fuelSelect.value === 'gas') {
-                    const elecSupp = document.getElementById('elec-supplier').value.trim().toLowerCase();
-                    const gasSupp = document.getElementById('gas-supplier').value.trim().toLowerCase();
-                    if (gasSupp !== '' && elecSupp !== '' && gasSupp !== elecSupp) {
-                        addActionRow("Energy Supply", "Gas and electricity suppliers do not match", "Check dual fuel bundle options to reduce standing charges.");
-                    }
+            if (isFuelScope && fuelSelect.value === 'gas') {
+                const elecSupp = document.getElementById('elec-supplier').value.trim().toLowerCase();
+                const gasSupp = document.getElementById('gas-supplier').value.trim().toLowerCase();
+                if (gasSupp !== '' && elecSupp !== '' && gasSupp !== elecSupp) {
+                    addActionRow("Energy Supply", "Gas and electricity suppliers do not match", "Check dual fuel bundle options to reduce standing charges.");
+                }
 
-                    // Gas Cost Calculation
-                    const gasUsageFormat = document.getElementById('gas-usage-format').value;
-                    const gasUsageInput = parseFloat(document.getElementById('gas-usage-input').value) || 0;
-                    const gasUnitRate = parseFloat(document.getElementById('gas-rate-unit').value) || 0;
-                    const gasScRate = parseFloat(document.getElementById('gas-rate-sc').value) || 0;
+                const gasUsageFormat = document.getElementById('gas-usage-format').value;
+                const gasUsageInput = parseFloat(document.getElementById('gas-usage-input').value) || 0;
+                const gasUnitRate = parseFloat(document.getElementById('gas-rate-unit').value) || 0;
+                const gasScRate = parseFloat(document.getElementById('gas-rate-sc').value) || 0;
 
-                    let annualGasKwh = gasUsageFormat === 'annual' ? gasUsageInput : (gasUsageInput * 12);
-                    let monthlyGasKwh = gasUsageFormat === 'monthly' ? gasUsageInput : (gasUsageInput / 12);
+                let monthlyGasKwh = gasUsageFormat === 'monthly' ? gasUsageInput : (gasUsageInput / 12);
+                let monthlyGasEnergyCost = (monthlyGasKwh * gasUnitRate) / 100;
+                let monthlyGasSCCost = (gasScRate * 365 / 12) / 100;
+                let totalGasMonthlyCost = monthlyGasEnergyCost + monthlyGasSCCost;
 
-                    let monthlyGasEnergyCost = (monthlyGasKwh * gasUnitRate) / 100;
-                    let monthlyGasSCCost = (gasScRate * 365 / 12) / 100;
-                    let totalGasMonthlyCost = monthlyGasEnergyCost + monthlyGasSCCost;
+                const calcGasScEl = document.getElementById('calc-gas-sc');
+                const calcGasEnergyEl = document.getElementById('calc-gas-energy');
+                const calcGasTotalEl = document.getElementById('calc-gas-total');
 
-                    document.getElementById('calc-gas-sc').innerText = `£${monthlyGasSCCost.toFixed(2)} / mo`;
-                    document.getElementById('calc-gas-energy').innerText = `£${monthlyGasEnergyCost.toFixed(2)} / mo`;
-                    document.getElementById('calc-gas-total').innerText = `£${totalGasMonthlyCost.toFixed(2)} / mo`;
+                if (calcGasScEl) calcGasScEl.innerText = `£${monthlyGasSCCost.toFixed(2)} / mo`;
+                if (calcGasEnergyEl) calcGasEnergyEl.innerText = `£${monthlyGasEnergyCost.toFixed(2)} / mo`;
+                if (calcGasTotalEl) calcGasTotalEl.innerText = `£${totalGasMonthlyCost.toFixed(2)} / mo`;
+            }
 
-                    // Gas Benchmark Check
-                    if (annualGasKwh > 0) {
-                        let gasBenchmark = 11500;
-                        if (totalOccupants <= 1) gasBenchmark = 7500;
-                        else if (totalOccupants <= 3) gasBenchmark = 11500;
-                        else gasBenchmark = 17000;
+            // Hot Water Automations & Cost Calculation based on Gas, Oil, or Electric Unit Rate
+            const isHotWaterScope = document.querySelector('input[data-target="sec-hot-water"]').checked;
+            if (isHotWaterScope) {
+                const hwSize = parseFloat(document.getElementById('hw-tank-size').value) || 150;
+                const hwKwhMonthly = (hwSize * 0.75) + (totalOccupants * 20);
+                const hwHeatedVal = hwHeatedBy.value;
+                const calcHwCostEl = document.getElementById('calc-hw-cost');
 
-                        if (annualGasKwh > (gasBenchmark * 1.05)) {
-                            addActionRow("High Gas Consumption", `Gas usage (${annualGasKwh.toFixed(0)} kWh/yr) exceeds national benchmark (${gasBenchmark} kWh)`, "Review boiler flow temp, room thermostat settings, and TRVs.");
-                            document.getElementById('calc-gas-total').classList.add('alert-red');
+                if (calcHwCostEl) {
+                    if (hwHeatedVal === 'instantaneous') {
+                        calcHwCostEl.value = "N/A (Instantaneous)";
+                        calcHwCostEl.classList.remove('alert-red');
+                    } else {
+                        let hwUnitRate = 0;
+                        let rateMissing = false;
+                        let missingMsg = "";
+
+                        if (hwHeatedVal === 'main') {
+                            if (fuelSelect.value === 'oil') {
+                                const oilAnnualCost = parseFloat(document.getElementById('oil-cost-previous-year').value) || 0;
+                                if (oilAnnualCost > 0) {
+                                    const oilHwMonthlyCost = (oilAnnualCost * 0.25) / 12;
+                                    calcHwCostEl.value = "£" + oilHwMonthlyCost.toFixed(2) + " (Est. Oil, prices vary)";
+                                    calcHwCostEl.classList.remove('alert-red');
+                                } else {
+                                    rateMissing = true;
+                                    missingMsg = "Please enter 'Cost Paid Previous Year (£)' in Additional Fuel (Oil) section.";
+                                }
+                            } else {
+                                const gasRateUnit = parseFloat(document.getElementById('gas-rate-unit').value) || 0;
+                                if (gasRateUnit > 0) {
+                                    hwUnitRate = gasRateUnit;
+                                } else {
+                                    rateMissing = true;
+                                    missingMsg = "Please enter figure into 'Rate per kWh (p)' in Gas Section.";
+                                }
+                            }
                         } else {
-                            document.getElementById('calc-gas-total').classList.remove('alert-red');
+                            // immersion or both uses electric rate
+                            const elecRateUnit = (isDual && dayRate > 0) ? dayRate : (dayRate > 0 ? dayRate : 0);
+                            if (elecRateUnit > 0) {
+                                hwUnitRate = elecRateUnit;
+                            } else {
+                                rateMissing = true;
+                                missingMsg = "Please enter figure into 'Rate per kWh (p)' in Electric Section.";
+                            }
+                        }
+
+                        if (rateMissing) {
+                            calcHwCostEl.value = missingMsg;
+                            calcHwCostEl.classList.add('alert-red');
+                            addActionRow("Hot Water Cost Error", "Missing Rate for Hot Water calculation", missingMsg);
+                        } else if (fuelSelect.value !== 'oil' || hwHeatedVal !== 'main') {
+                            calcHwCostEl.classList.remove('alert-red');
+                            const hwMonthlyCost = (hwKwhMonthly * hwUnitRate) / 100;
+                            calcHwCostEl.value = hwMonthlyCost > 0 ? "£" + hwMonthlyCost.toFixed(2) : "£0.00";
                         }
                     }
                 }
-                
-                // Boiler / Tank Service Date Check
-                const serviceDateId = (fuelSelect.value === 'oil') ? 'oil-service-date' : 'boiler-service-date';
-                const serviceDateInput = document.getElementById(serviceDateId);
-                if (serviceDateInput && serviceDateInput.value) {
-                    const sDate = new Date(serviceDateInput.value);
-                    const diffDays = Math.ceil(Math.abs(new Date() - sDate) / (1000 * 60 * 60 * 24));
-                    if (diffDays > 365) {
-                        addActionRow("Heating Servicing", "Exceeds 12 months since last service", "Annual safety and efficiency service required.");
-                    }
+
+                if (hwHeatedVal !== 'instantaneous' && document.getElementById('hw-control').value === 'continuous') {
+                    addActionRow("Hot Water", "Immersion set to 'Continuous'", "High cost alert: Reprogram to off-peak timer");
                 }
             }
 
-            // Hot Water Automations
-            const isHotWaterScope = document.querySelector('input[data-target="sec-hot-water"]').checked;
-            if (isHotWaterScope && hwHeatedBy.value !== 'instantaneous' && document.getElementById('hw-control').value === 'continuous') {
-                addActionRow("Hot Water", "Immersion set to 'Continuous'", "High cost alert: Reprogram to off-peak timer");
-            }
-
-            // EV Automations
-            const isEvScope = document.querySelector('input[data-target="sec-ev"]').checked;
-            if (isEvScope && evChargerSelect.value === 'granny') {
-                addActionRow("EV Safety & Cost", "EV charging via standard 3-pin socket ('Granny Charger')", "Review socket load capacity and advise on dedicated home EV charger installation.");
-            }
-
-            // Solar PV Automations
+            // Solar PV Automations (Conservative East Aspect Estimation)
             const isSolarScope = document.querySelector('input[data-target="sec-solar"]').checked;
             if (isSolarScope) {
-                const solarRate = parseFloat(document.getElementById('solar-rate').value);
+                const solarRate = parseFloat(document.getElementById('solar-rate').value) || 0;
+                const solarAnnualOutput = parseFloat(document.getElementById('solar-annual-output').value) || 0;
+                const calcSolarExportKwhEl = document.getElementById('calc-solar-export-kwh');
+                const calcSolarExportCostEl = document.getElementById('calc-solar-export-cost');
+
+                if (solarAnnualOutput > 0) {
+                    const eastFacingGeneration = solarAnnualOutput * 0.75;
+                    const annualExportKwh = eastFacingGeneration * 0.50;
+                    const monthlyExportKwh = annualExportKwh / 12;
+                    const monthlyExportEarnings = (monthlyExportKwh * solarRate) / 100;
+
+                    if (calcSolarExportKwhEl) calcSolarExportKwhEl.value = monthlyExportKwh.toFixed(1) + " kWh / mo";
+                    if (calcSolarExportCostEl) calcSolarExportCostEl.value = monthlyExportEarnings > 0 ? "£" + monthlyExportEarnings.toFixed(2) + " / mo" : "£0.00 / mo";
+                } else {
+                    if (calcSolarExportKwhEl) calcSolarExportKwhEl.value = "";
+                    if (calcSolarExportCostEl) calcSolarExportCostEl.value = "";
+                }
+
                 if (solarRate > 0 && solarRate < 12) {
                     addActionRow("Solar PV", `Low Export Rate (${solarRate}p)`, "Consider switching export provider for better SEG rate");
                 }
 
                 if (solarExportStatus.value === 'no') {
-                    if (solarAccountStatus.value === 'none') {
-                        addActionRow("Solar PV", "No Online Account Setup", "Account creation required to apply for export funds");
+                    if (document.getElementById('solar-rate').value > 0) {
+                        addActionRow("Solar PV", "Export status marked NO but rate provided", "Clarify export setup. Ensure resident applies for SEG.");
+                    } else {
+                        addActionRow("Solar PV", "No Export Tariff active", "Assist resident in applying for SEG (Smart Export Guarantee) to receive payments for exported energy.");
                     }
-                    
+                } else if (solarExportStatus.value === 'yes' && solarAccountStatus.value === 'none') {
+                    addActionRow("Solar PV", "No Online Account for Export", "Help resident set up online account with energy provider to monitor and claim export payments.");
+                }
+
+                if (solarAccountStatus.value === 'none') {
                     document.querySelectorAll('.doc-chk').forEach(chk => {
                         if (!chk.checked) {
-                            addActionRow("Solar PV Docs", `Missing: ${chk.getAttribute('data-doc')}`, "Obtain document to facilitate export payments");
+                            addActionRow("Solar PV", `Missing Document: ${chk.getAttribute('data-doc')}`, "Required for SEG application. Contact installer or DNO to retrieve.");
                         }
                     });
                 }
             }
 
-            // Re-append user's custom manual rows
+            // Restore manual action log rows and refresh textarea heights
             manualRows.forEach(row => registerBody.appendChild(row));
+            registerBody.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
         }
 
-        // --- 3. Event Listeners & UI Logic ---
-        
-        // Address Header Sync
-        if (addressInput && headerAddress) {
-            addressInput.addEventListener('input', function() {
-                headerAddress.textContent = this.value;
-            });
-        }
+        document.querySelectorAll('.trigger-calc').forEach(el => {
+            el.addEventListener('change', runMasterCalculation);
+            el.addEventListener('input', runMasterCalculation);
+        });
 
-        // Scope Toggles (Checkbox section show/hide)
-        function syncScopeSections() {
-            scopeToggles.forEach(toggle => {
-                const targetId = toggle.getAttribute('data-target');
+        // Module scope section visibility
+        document.querySelectorAll('.scope-toggle').forEach(cb => {
+            cb.addEventListener('change', function() {
+                const targetId = this.getAttribute('data-target');
                 const targetEl = document.getElementById(targetId);
                 if (targetEl) {
-                    targetEl.classList.toggle('module-hidden', !toggle.checked);
+                    if (this.checked) {
+                        targetEl.classList.remove('module-hidden');
+                    } else {
+                        targetEl.classList.add('module-hidden');
+                    }
                 }
-            });
-            runMasterCalculation();
-        }
-        scopeToggles.forEach(t => t.addEventListener('change', syncScopeSections));
-
-        // Add Custom Action Log Item
-        document.getElementById('btn-add-action').addEventListener('click', function() {
-            const tr = document.createElement('tr');
-            tr.className = 'manual-row';
-            tr.innerHTML = `
-                <td><input type="text" placeholder="Category / Item requested by resident"></td>
-                <td><input type="text" placeholder="Recommended Action / Follow-up detail"></td>
-            `;
-            registerBody.appendChild(tr);
-        });
-
-        // Electric Heating Sub-type Toggles (Storage vs ASHP)
-        eHeatRadios.forEach(r => {
-            r.addEventListener('change', () => {
-                const isStorage = document.querySelector('input[name="e_heat"]:checked').value === 'storage';
-                subStorage.classList.toggle('module-hidden', !isStorage);
-                subAshp.classList.toggle('module-hidden', isStorage);
-            });
-        });
-
-        // Gas vs Oil Fuel Selection Toggle (Updated for new markup)
-        if(fuelSelect) {
-            fuelSelect.addEventListener('change', () => {
-                const isOil = fuelSelect.value === 'oil';
-                if(gasFields) gasFields.classList.toggle('module-hidden', isOil);
-                if(oilFields) oilFields.classList.toggle('module-hidden', !isOil);
                 runMasterCalculation();
             });
-        }
-
-        // Hot Water Instantaneous Toggle
-        function updateHotWaterView() {
-            const isInstant = hwHeatedBy.value === 'instantaneous';
-            hwConditionalRows.forEach(row => row.classList.toggle('module-hidden', isInstant));
-        }
-        hwHeatedBy.addEventListener('change', updateHotWaterView);
-
-        // EV Charger Visibility Toggle
-        function updateEvView() {
-            const isNone = evChargerSelect.value === 'none';
-            evConditionalRows.forEach(row => row.classList.toggle('module-hidden', isNone));
-        }
-        evChargerSelect.addEventListener('change', updateEvView);
-
-        // Tariff End Date Auto Dropdowns (Electricity & Gas)
-        function generateTariffDates(structureVal, targetSelect) {
-            if(!targetSelect) return;
-            targetSelect.innerHTML = '';
-            if (structureVal === 'variable') {
-                const d = new Date();
-                const m = d.getMonth() + 1;
-                let nextCap = "1st January (Next Year)";
-                if (m < 4) nextCap = "1st April";
-                else if (m < 7) nextCap = "1st July";
-                else if (m < 9) nextCap = "1st September";
-                
-                const opt = document.createElement('option');
-                opt.value = nextCap;
-                opt.text = "Next Ofgem Cap: " + nextCap;
-                targetSelect.appendChild(opt);
-            } else {
-                const d = new Date();
-                for (let i = 0; i < 24; i++) {
-                    const tempD = new Date(d.getFullYear(), d.getMonth() + i, 1);
-                    const monthStr = tempD.toLocaleString('default', { month: 'long', year: 'numeric' });
-                    const opt = document.createElement('option');
-                    opt.value = monthStr;
-                    opt.text = "Ends: " + monthStr;
-                    targetSelect.appendChild(opt);
-                }
-            }
-        }
-
-        function updateElecDateDropdown() {
-            if(structureSelect && dateSelect) generateTariffDates(structureSelect.value, dateSelect);
-        }
-        function updateGasDateDropdown() {
-            if(gasStructureSelect && gasDateSelect) generateTariffDates(gasStructureSelect.value, gasDateSelect);
-        }
-
-        // Fixed Tariff Exit Fee Toggles
-        if(structureSelect) {
-            structureSelect.addEventListener('change', () => {
-                const isFixed = structureSelect.value === 'fixed';
-                if(elecExitFeeRow) elecExitFeeRow.classList.toggle('module-hidden', !isFixed);
-                updateElecDateDropdown();
-            });
-        }
-        
-        if(gasStructureSelect) {
-            gasStructureSelect.addEventListener('change', () => {
-                const isFixed = gasStructureSelect.value === 'fixed';
-                const rowsGasExit = document.querySelectorAll('#row-gas-exit-fee');
-                rowsGasExit.forEach(row => row.classList.toggle('module-hidden', !isFixed));
-                updateGasDateDropdown();
-            });
-        }
-
-        // Single vs Dual Rate Toggle
-        if(rateTypeSelect) {
-            rateTypeSelect.addEventListener('change', (e) => {
-                const isDual = e.target.value === 'dual';
-                if(nightRateInput) nightRateInput.disabled = !isDual;
-                if(rowDualSplit) rowDualSplit.classList.toggle('module-hidden', !isDual);
-            });
-        }
-
-        // Solar Export & Account Logic
-        function updateSolarVisibility() {
-            const isNoExport = solarExportStatus.value === 'no';
-            if(rowSolarAccount) rowSolarAccount.classList.toggle('module-hidden', !isNoExport);
-            if(solarDocsWrapper) solarDocsWrapper.classList.toggle('module-hidden', !isNoExport);
-
-            const isNoAccount = solarAccountStatus.value === 'none';
-            if (isNoExport && isNoAccount) {
-                if(rowSolarPayment) rowSolarPayment.classList.add('disabled-block');
-                if(solarDocsWrapper) solarDocsWrapper.classList.add('disabled-block');
-            } else {
-                if(rowSolarPayment) rowSolarPayment.classList.remove('disabled-block');
-                if(solarDocsWrapper) solarDocsWrapper.classList.remove('disabled-block');
-            }
-            runMasterCalculation();
-        }
-        if(solarExportStatus) solarExportStatus.addEventListener('change', updateSolarVisibility);
-        if(solarAccountStatus) solarAccountStatus.addEventListener('change', updateSolarVisibility);
-
-        // Attach global calculation trigger
-        document.querySelectorAll('.trigger-calc').forEach(el => {
-            el.addEventListener('input', runMasterCalculation);
-            el.addEventListener('change', runMasterCalculation);
         });
 
-        // --- 4. Initialization ---
-        syncScopeSections();
-        updateHotWaterView();
-        updateEvView();
-        updateElecDateDropdown();
-        updateGasDateDropdown();
-        updateSolarVisibility();
-        runMasterCalculation(); // Final pass
+        // Custom Action Button
+        const btnAddAction = document.getElementById('btn-add-action');
+        if (btnAddAction) {
+            btnAddAction.addEventListener('click', function() {
+                const tr = document.createElement('tr');
+                tr.className = 'manual-row';
+                tr.innerHTML = `
+                    <td><textarea placeholder="Custom Category / Item..." style="width:100%; min-height:40px; border:none; background:transparent;"></textarea></td>
+                    <td>
+                        <div style="display:flex; gap:10px;">
+                            <textarea placeholder="Custom Action / Advice..." style="flex:1; min-height:40px; border:none; background:transparent;"></textarea>
+                            <button type="button" class="btn-delete" onclick="this.closest('tr').remove();" title="Delete custom row">X</button>
+                        </div>
+                    </td>
+                `;
+                registerBody.appendChild(tr);
+                tr.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
+            });
+        }
+
+        // Initialize state
+        document.querySelectorAll('textarea').forEach(ta => autoResizeTextarea(ta));
+        updateVisibility();
+        runMasterCalculation();
     });
 </script>
+
 </body>
 </html>

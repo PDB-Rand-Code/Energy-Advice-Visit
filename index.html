@@ -28,6 +28,13 @@
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
+        .header-left {
+            flex: 1;
+        }
+        .header-right {
+            flex: 0 0 auto;
+            text-align: right;
+        }
         .header-top h1 {
             color: #004080;
             margin: 0;
@@ -42,7 +49,7 @@
             color: #555;
         }
         .header-logo {
-            max-height: 75px;
+            max-height: 80px;
             width: auto;
             object-fit: contain;
         }
@@ -175,12 +182,14 @@
 
 <div class="container">
     <div class="header-top">
-        <div>
+        <div class="header-left">
             <h1>RAND ASSOCIATES</h1>
             <p>Energy Advice Visit – Resident Checklist</p>
             <div id="header-address"></div>
         </div>
-        <img src="rand-logo.png" alt="Rand Associates Logo" class="header-logo" onerror="this.style.display='none'">
+        <div class="header-right">
+            <img id="company-logo" src="" alt="Company Logo" class="header-logo">
+        </div>
     </div>
 
     <!-- GENERAL SECTION -->
@@ -219,7 +228,7 @@
                 <td colspan="4" class="center" style="line-height: 2.2em;">
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-elec" checked> Electricity Supply </label> &nbsp;|&nbsp;
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-app" checked> Appliance Usage </label> &nbsp;|&nbsp;
-                    <label><input type="checkbox" class="scope-toggle" data-target="sec-gas"> Gas/Oil Heating </label> &nbsp;|&nbsp;
+                    <label><input type="checkbox" class="scope-toggle" data-target="sec-fuel"> Additional Fuel Heating </label> &nbsp;|&nbsp;
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-elec-heat"> Electric Heating </label> &nbsp;|&nbsp;
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-hot-water"> Hot Water </label> &nbsp;|&nbsp;
                     <label><input type="checkbox" class="scope-toggle" data-target="sec-solar"> Solar PV </label> &nbsp;|&nbsp;
@@ -453,6 +462,127 @@
         </div>
     </div>
 
+    <!-- ADDITIONAL FUEL HEATING (Renamed from Gas & Oil Heating) -->
+    <div id="sec-fuel" class="module-hidden">
+        <h2>ADDITIONAL FUEL HEATING</h2>
+        <div class="table-wrapper">
+            <table>
+                <tr>
+                    <th>Heating Fuel Type</th>
+                    <td colspan="3">
+                        <select id="heating-fuel" class="trigger-calc">
+                            <option value="gas">Gas</option>
+                            <option value="oil">Oil</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Gas-Specific Fields -->
+            <div id="gas-fields">
+                <table class="row-gas-only">
+                    <tr>
+                        <th>Tariff Structure</th>
+                        <td>
+                            <select id="gas-tariff-structure" class="trigger-calc">
+                                <option value="variable">Variable (Price Cap)</option>
+                                <option value="fixed">Fixed</option>
+                            </select>
+                        </td>
+                        <th>Tariff Change / End Date</th>
+                        <td><select id="gas-tariff-date-select"></select></td>
+                    </tr>
+                    <tr id="row-gas-exit-fee" class="row-gas-only module-hidden">
+                        <th>Exit Fee Details</th>
+                        <td colspan="3"><input type="text" placeholder="Enter exit fee amount or conditions (e.g., £50)"></td>
+                    </tr>
+                    <tr class="row-gas-only">
+                        <th>Energy Company</th>
+                        <td><input type="text" id="gas-supplier" class="trigger-calc" placeholder="Enter gas supplier"></td>
+                        <th>Last Serviced Date</th>
+                        <td><input type="date" id="boiler-service-date" class="trigger-calc"></td>
+                    </tr>
+                    
+                    <!-- Gas Calculations & Usage Section -->
+                    <tr class="row-gas-only">
+                        <th colspan="4" style="text-align: center; background: #e6f0fa;">Gas Calculations & Usage (Before Tax)</th>
+                    </tr>
+                    <tr class="row-gas-only">
+                        <th>Usage Input Format</th>
+                        <td>
+                            <select id="gas-usage-format" class="trigger-calc">
+                                <option value="annual">Estimated Annual Usage (kWh)</option>
+                                <option value="monthly">Estimated Monthly Usage (kWh)</option>
+                            </select>
+                        </td>
+                        <th>Total Usage Input</th>
+                        <td><input type="number" id="gas-usage-input" class="trigger-calc" placeholder="Total kWh"></td>
+                    </tr>
+                    <tr class="row-gas-only">
+                        <th>Rate per kWh (p)</th>
+                        <td><input type="number" step="0.01" id="gas-rate-unit" class="trigger-calc" placeholder="e.g. 6.8"></td>
+                        <th>Standing Charge (p/day)</th>
+                        <td><input type="number" step="0.01" id="gas-rate-sc" class="trigger-calc" placeholder="e.g. 30.0"></td>
+                    </tr>
+                    <tr class="row-gas-only">
+                        <th>Calculated Standing Charge (Per Month)</th>
+                        <td class="calculated-value" id="calc-gas-sc">£0.00 / mo</td>
+                        <th>Calculated Energy Cost (Per Month)</th>
+                        <td class="calculated-value" id="calc-gas-energy">£0.00 / mo</td>
+                    </tr>
+                    <tr class="row-gas-only">
+                        <th colspan="3">Total Combined Monthly Cost (Energy + Standing Charge)</th>
+                        <td class="calculated-value" id="calc-gas-total">£0.00 / mo</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Oil-Specific Fields -->
+            <div id="oil-fields" class="module-hidden">
+                <table>
+                    <tr>
+                        <th>Oil Tank Size (Litres)</th>
+                        <td><input type="number" id="oil-tank-size" placeholder="e.g. 1000"></td>
+                        <th>Cost Paid Previous Year (£)</th>
+                        <td><input type="number" id="oil-cost-previous-year" class="trigger-calc" placeholder="e.g. 2400"></td>
+                    </tr>
+                    <tr>
+                        <th>Last Tank Fill Date</th>
+                        <td><input type="date" id="oil-last-fill-date" class="trigger-calc"></td>
+                        <th>Tank Fill Frequency</th>
+                        <td>
+                            <select>
+                                <option>Once per year</option>
+                                <option>Twice per year</option>
+                                <option>Three times per year</option>
+                                <option>Four+ times per year</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Last Boiler Service Date</th>
+                        <td colspan="3"><input type="date" id="oil-service-date" class="trigger-calc"></td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Heating Controls (Shared for both Gas and Oil) -->
+            <table>
+                <tr>
+                    <th>Heating Controls Present</th>
+                    <td colspan="3">
+                        <label><input type="checkbox" id="ctrl-programmer-boiler"> Programmer on Boiler</label> &nbsp;|&nbsp;
+                        <label><input type="checkbox" id="ctrl-programmer"> Programmer</label> &nbsp;|&nbsp;
+                        <label><input type="checkbox" id="ctrl-thermostat"> Thermostat</label> &nbsp;|&nbsp;
+                        <label><input type="checkbox" id="ctrl-trvs"> TRVs</label> &nbsp;|&nbsp;
+                        <label><input type="checkbox" id="ctrl-smart"> Smart Heating System</label>
+                        <br><label style="color:#004080; font-weight:bold; margin-top:10px; display:inline-block;"><input type="checkbox" class="action-req-cb trigger-calc" data-category="Heating Controls" data-item="Heating control upgrade recommended via social housing provider"> Missing Controls Requiring Attention (Triggers Action Log)</label>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
     <!-- ELECTRIC HEATING -->
     <div id="sec-elec-heat" class="module-hidden">
         <h2>ELECTRIC HEATING</h2>
@@ -541,103 +671,6 @@
                     </td>
                 </tr>
             </table>
-        </div>
-    </div>
-
-    <!-- GAS & OIL HEATING -->
-    <div id="sec-gas" class="module-hidden">
-        <h2>GAS & OIL HEATING</h2>
-        <div class="table-wrapper">
-            <table>
-                <tr>
-                    <th>Heating Fuel Type</th>
-                    <td colspan="3">
-                        <select id="heating-fuel" class="trigger-calc">
-                            <option value="gas">Gas</option>
-                            <option value="oil">Oil</option>
-                        </select>
-                    </td>
-                </tr>
-                <!-- Gas-specific tariff and tracking rows -->
-                <tr id="row-gas-tariff-structure" class="row-gas-only">
-                    <th>Tariff Structure</th>
-                    <td>
-                        <select id="gas-tariff-structure" class="trigger-calc">
-                            <option value="variable">Variable (Price Cap)</option>
-                            <option value="fixed">Fixed</option>
-                        </select>
-                    </td>
-                    <th>Tariff Change / End Date</th>
-                    <td><select id="gas-tariff-date-select"></select></td>
-                </tr>
-                <tr id="row-gas-exit-fee" class="row-gas-only module-hidden">
-                    <th>Exit Fee Details</th>
-                    <td colspan="3"><input type="text" placeholder="Enter exit fee amount or conditions (e.g., £50)"></td>
-                </tr>
-                <tr class="row-gas-only">
-                    <th>Energy Company</th>
-                    <td><input type="text" id="gas-supplier" class="trigger-calc" placeholder="Enter gas supplier"></td>
-                    <th>Last Serviced Date</th>
-                    <td><input type="date" id="boiler-service-date" class="trigger-calc"></td>
-                </tr>
-                
-                <!-- Oil-specific rows (hidden by default) -->
-                <tr id="row-oil-tank" class="module-hidden">
-                    <th>Oil Tank Size (Litres)</th>
-                    <td><input type="number" placeholder="e.g. 1000"></td>
-                    <th>Cost of Oil</th>
-                    <td><input type="text" placeholder="e.g. £500 per fill or 60p/litre"></td>
-                </tr>
-                <tr id="row-oil-service" class="module-hidden">
-                    <th>Last Serviced Date</th>
-                    <td colspan="3"><input type="date" id="oil-service-date" class="trigger-calc"></td>
-                </tr>
-                
-                <tr>
-                    <th>Heating Controls Present</th>
-                    <td colspan="3">
-                        <select id="heating-controls-select">
-                            <option value="none">None</option>
-                            <option value="thermostat">Thermostat</option>
-                            <option value="prog_thermostat">Programmable Thermostat</option>
-                            <option value="smart_app">Smart/App Controlled</option>
-                        </select>
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <label><input type="checkbox"> TRVs on Radiators</label>
-                        <br><label style="color:#004080; font-weight:bold; margin-top:10px; display:inline-block;"><input type="checkbox" class="action-req-cb trigger-calc" data-category="Heating Controls" data-item="Heating control upgrade recommended via social housing provider"> Missing Controls Requiring Attention (Triggers Action Log)</label>
-                    </td>
-                </tr>
-            </table>
-
-            <!-- Gas Usage & Cost Calculations -->
-            <div id="gas-calc-wrapper" class="row-gas-only">
-                <h4 style="margin-top: 15px;">Gas Calculations & Usage (Before Tax)</h4>
-                <table>
-                    <tr>
-                        <th>Usage Input Format</th>
-                        <td>
-                            <select id="gas-usage-format" class="trigger-calc">
-                                <option value="annual">Estimated Annual Usage (kWh)</option>
-                                <option value="monthly">Estimated Monthly Usage (kWh)</option>
-                            </select>
-                        </td>
-                        <th>Total Usage Input</th>
-                        <td><input type="number" id="gas-usage-input" class="trigger-calc" placeholder="Total kWh"></td>
-                    </tr>
-                    <tr>
-                        <th>Rate per kWh (p)</th>
-                        <td><input type="number" step="0.01" id="gas-rate-unit" class="trigger-calc" placeholder="e.g. 6.8"></td>
-                        <th>Standing Charge (p/day)</th>
-                        <td><input type="number" step="0.01" id="gas-rate-sc" class="trigger-calc" placeholder="e.g. 30.0"></td>
-                    </tr>
-                    <tr>
-                        <th>Calculated Standing Charge (Per Month)</th>
-                        <td class="calculated-value" id="calc-gas-sc">£0.00 / mo</td>
-                        <th>Total Estimated Monthly Cost</th>
-                        <td class="calculated-value" id="calc-gas-total">£0.00 / mo</td>
-                    </tr>
-                </table>
-            </div>
         </div>
     </div>
 
@@ -857,9 +890,8 @@
         const subStorage = document.getElementById('sub-storage');
         const subAshp = document.getElementById('sub-ashp');
         const fuelSelect = document.getElementById('heating-fuel');
-        const rowGasOnly = document.querySelectorAll('.row-gas-only');
-        const rowOil = document.getElementById('row-oil-tank');
-        const gasCalcWrapper = document.getElementById('gas-calc-wrapper');
+        const gasFields = document.getElementById('gas-fields');
+        const oilFields = document.getElementById('oil-fields');
         const hwHeatedBy = document.getElementById('hw-heated-by');
         const hwConditionalRows = document.querySelectorAll('.hw-conditional-row');
         const evChargerSelect = document.getElementById('ev-charger-present');
@@ -876,11 +908,17 @@
         const rowSolarPayment = document.getElementById('row-solar-payment');
         const solarAccountStatus = document.getElementById('solar-account-status');
         const solarDocsWrapper = document.getElementById('solar-docs-wrapper');
-        
-        // New elements from EnergyAdvice 10 integration
         const elecExitFeeRow = document.getElementById('row-elec-exit-fee');
         const rowGasExitFee = document.getElementById('row-gas-exit-fee');
-        const rowGasTariffStructure = document.getElementById('row-gas-tariff-structure');
+        const companyLogo = document.getElementById('company-logo');
+
+        // Set logo source from uploaded image
+        if (companyLogo) {
+            companyLogo.src = 'https://lumo-proton.s3.amazonaws.com/f8612d63-206c-4ea7-9054-810206777a4a.png';
+            companyLogo.onerror = function() {
+                this.style.display = 'none';
+            };
+        }
 
         // --- 2. Master Calculation & Automation Engine ---
         function runMasterCalculation() {
@@ -898,10 +936,14 @@
                 registerBody.appendChild(tr);
             }
 
-            // Process Manual Action Logic Checks
+            // Process Manual Action Logic Checks - Only trigger if gas section is visible (not oil)
             document.querySelectorAll('.action-req-cb').forEach(cb => {
                 if (cb.checked && !cb.closest('.module-hidden')) {
-                    addActionRow(cb.getAttribute('data-category'), cb.getAttribute('data-item'), "Action required");
+                    // Only add action if gas heating is selected (not oil)
+                    const isGas = fuelSelect.value === 'gas' && !fuelSelect.closest('.module-hidden');
+                    if (isGas || fuelSelect.closest('.module-hidden') === null) {
+                        addActionRow(cb.getAttribute('data-category'), cb.getAttribute('data-item'), "Action required");
+                    }
                 }
             });
 
@@ -1087,9 +1129,9 @@
                 document.getElementById('calc-overnight-charge').value = "£" + estOvernightCost.toFixed(2);
             }
 
-            // Gas/Oil Automations & Calculations
-            const isGasScope = document.querySelector('input[data-target="sec-gas"]').checked;
-            if (isGasScope) {
+            // Gas/Oil Automations & Calculations (now sec-fuel)
+            const isFuelScope = document.querySelector('input[data-target="sec-fuel"]').checked;
+            if (isFuelScope) {
                 if (fuelSelect.value === 'gas') {
                     const elecSupp = document.getElementById('elec-supplier').value.trim().toLowerCase();
                     const gasSupp = document.getElementById('gas-supplier').value.trim().toLowerCase();
@@ -1111,6 +1153,7 @@
                     let totalGasMonthlyCost = monthlyGasEnergyCost + monthlyGasSCCost;
 
                     document.getElementById('calc-gas-sc').innerText = `£${monthlyGasSCCost.toFixed(2)} / mo`;
+                    document.getElementById('calc-gas-energy').innerText = `£${monthlyGasEnergyCost.toFixed(2)} / mo`;
                     document.getElementById('calc-gas-total').innerText = `£${totalGasMonthlyCost.toFixed(2)} / mo`;
 
                     // Gas Benchmark Check
@@ -1179,7 +1222,7 @@
         }
 
         // --- 3. Event Listeners & UI Logic ---
-
+        
         // Address Header Sync
         if (addressInput && headerAddress) {
             addressInput.addEventListener('input', function() {
@@ -1220,14 +1263,15 @@
             });
         });
 
-        // Gas vs Oil Fuel Selection Toggle
-        fuelSelect.addEventListener('change', () => {
-            const isOil = fuelSelect.value === 'oil';
-            rowGasOnly.forEach(row => row.classList.toggle('module-hidden', isOil));
-            gasCalcWrapper.classList.toggle('module-hidden', isOil);
-            rowOil.classList.toggle('module-hidden', !isOil);
-            runMasterCalculation();
-        });
+        // Gas vs Oil Fuel Selection Toggle (Updated for new markup)
+        if(fuelSelect) {
+            fuelSelect.addEventListener('change', () => {
+                const isOil = fuelSelect.value === 'oil';
+                if(gasFields) gasFields.classList.toggle('module-hidden', isOil);
+                if(oilFields) oilFields.classList.toggle('module-hidden', !isOil);
+                runMasterCalculation();
+            });
+        }
 
         // Hot Water Instantaneous Toggle
         function updateHotWaterView() {
@@ -1243,8 +1287,9 @@
         }
         evChargerSelect.addEventListener('change', updateEvView);
 
-        // Tariff End Date Auto Dropdowns (Electricity & Gas) - Updated with fixed tariff exit fees
+        // Tariff End Date Auto Dropdowns (Electricity & Gas)
         function generateTariffDates(structureVal, targetSelect) {
+            if(!targetSelect) return;
             targetSelect.innerHTML = '';
             if (structureVal === 'variable') {
                 const d = new Date();
@@ -1272,50 +1317,57 @@
         }
 
         function updateElecDateDropdown() {
-            generateTariffDates(structureSelect.value, dateSelect);
+            if(structureSelect && dateSelect) generateTariffDates(structureSelect.value, dateSelect);
         }
         function updateGasDateDropdown() {
-            generateTariffDates(gasStructureSelect.value, gasDateSelect);
+            if(gasStructureSelect && gasDateSelect) generateTariffDates(gasStructureSelect.value, gasDateSelect);
         }
 
-        // Fixed Tariff Exit Fee Toggles (NEW from EnergyAdvice 10)
-        structureSelect.addEventListener('change', () => {
-            const isFixed = structureSelect.value === 'fixed';
-            elecExitFeeRow.classList.toggle('module-hidden', !isFixed);
-            updateElecDateDropdown();
-        });
+        // Fixed Tariff Exit Fee Toggles
+        if(structureSelect) {
+            structureSelect.addEventListener('change', () => {
+                const isFixed = structureSelect.value === 'fixed';
+                if(elecExitFeeRow) elecExitFeeRow.classList.toggle('module-hidden', !isFixed);
+                updateElecDateDropdown();
+            });
+        }
         
-        gasStructureSelect.addEventListener('change', () => {
-            const isFixed = gasStructureSelect.value === 'fixed';
-            rowGasExitFee.classList.toggle('module-hidden', !isFixed);
-            updateGasDateDropdown();
-        });
+        if(gasStructureSelect) {
+            gasStructureSelect.addEventListener('change', () => {
+                const isFixed = gasStructureSelect.value === 'fixed';
+                const rowsGasExit = document.querySelectorAll('#row-gas-exit-fee');
+                rowsGasExit.forEach(row => row.classList.toggle('module-hidden', !isFixed));
+                updateGasDateDropdown();
+            });
+        }
 
         // Single vs Dual Rate Toggle
-        rateTypeSelect.addEventListener('change', (e) => {
-            const isDual = e.target.value === 'dual';
-            nightRateInput.disabled = !isDual;
-            rowDualSplit.classList.toggle('module-hidden', !isDual);
-        });
+        if(rateTypeSelect) {
+            rateTypeSelect.addEventListener('change', (e) => {
+                const isDual = e.target.value === 'dual';
+                if(nightRateInput) nightRateInput.disabled = !isDual;
+                if(rowDualSplit) rowDualSplit.classList.toggle('module-hidden', !isDual);
+            });
+        }
 
         // Solar Export & Account Logic
         function updateSolarVisibility() {
             const isNoExport = solarExportStatus.value === 'no';
-            rowSolarAccount.classList.toggle('module-hidden', !isNoExport);
-            solarDocsWrapper.classList.toggle('module-hidden', !isNoExport);
+            if(rowSolarAccount) rowSolarAccount.classList.toggle('module-hidden', !isNoExport);
+            if(solarDocsWrapper) solarDocsWrapper.classList.toggle('module-hidden', !isNoExport);
 
             const isNoAccount = solarAccountStatus.value === 'none';
             if (isNoExport && isNoAccount) {
-                rowSolarPayment.classList.add('disabled-block');
-                solarDocsWrapper.classList.add('disabled-block');
+                if(rowSolarPayment) rowSolarPayment.classList.add('disabled-block');
+                if(solarDocsWrapper) solarDocsWrapper.classList.add('disabled-block');
             } else {
-                rowSolarPayment.classList.remove('disabled-block');
-                solarDocsWrapper.classList.remove('disabled-block');
+                if(rowSolarPayment) rowSolarPayment.classList.remove('disabled-block');
+                if(solarDocsWrapper) solarDocsWrapper.classList.remove('disabled-block');
             }
             runMasterCalculation();
         }
-        solarExportStatus.addEventListener('change', updateSolarVisibility);
-        solarAccountStatus.addEventListener('change', updateSolarVisibility);
+        if(solarExportStatus) solarExportStatus.addEventListener('change', updateSolarVisibility);
+        if(solarAccountStatus) solarAccountStatus.addEventListener('change', updateSolarVisibility);
 
         // Attach global calculation trigger
         document.querySelectorAll('.trigger-calc').forEach(el => {
@@ -1330,7 +1382,7 @@
         updateElecDateDropdown();
         updateGasDateDropdown();
         updateSolarVisibility();
-        runMasterCalculation();
+        runMasterCalculation(); // Final pass
     });
 </script>
 </body>
